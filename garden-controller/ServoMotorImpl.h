@@ -2,7 +2,8 @@
 #define __SERVO_MOTOR_IMPL__
 
 #include "ServoMotor.h"
-#include <Servo.h>
+#include "ServoTimer2.h"
+#include <Arduino.h>
 
 class ServoMotorImpl: public ServoMotor {
 
@@ -13,9 +14,9 @@ public:
   void setPosition(int angle);
   void off();
     
-private:
+protected:
   int pin; 
-  Servo motor; 
+  ServoTimer2 motor; 
 };
 
 #endif
