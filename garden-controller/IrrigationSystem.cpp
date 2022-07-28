@@ -1,10 +1,9 @@
-#include <Arduino.h>
 #include "IrrigationSystem.h"
 
 #define IRRIGATE_TIME 2000
 #define SLEEP_TIME 60000
 
-IrrigationSystem :: IrrigationSystem(int pin) {
+IrrigationSystem::IrrigationSystem(int pin):ServoMotorImpl(pin) {
   this -> pin = pin;
   this -> speed = 0;
   this -> pos = 0;
