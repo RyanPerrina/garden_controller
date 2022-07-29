@@ -5,13 +5,13 @@
 #include "httpService.h"
 
 // ????????
-#define PIN_TEMP G34
-#define PIN_LED G35
-#define PIN_PHOTO G32
+#define PIN_TEMP 34
+#define PIN_LED 35
+#define PIN_PHOTO 32
 
 const char* ssid = "Mi10";
 const char* password = "12345678";
-const char *serviceURI = "https://?????????????????????????????????????????????????????????";
+const char* serviceURI = "";
 TemperatureSensor *temp;
 Led *led;
 Photoresistor *photo;
@@ -21,11 +21,11 @@ void setup() {
   temp = new TemperatureSensor(PIN_TEMP);
   led = new Led(PIN_LED);
   photo = new Photoresistor(PIN_PHOTO);
-  http = new httpService(ssid, password, service)
-  http->on()
+  http = new httpService("Mi10", password, serviceURI);
+  http->on();
 }
 
 void loop() {
   delay(10000);
-  http->send(temp -> getTemperature(), photo -> getLight())
+  http->send(temp -> getTemperature(), photo -> getLight());
 }

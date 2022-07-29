@@ -1,15 +1,14 @@
 #include <WiFi.h>
-#include <HTTPClient.h>
+//#include <HTTPClient.h>
 #include "httpService.h"
 
-HttpService:HttpService(char* ssid, char* password,char* service){
+httpService::httpService(const char* ssid, const char* password, const char* service){
   this->ssid=ssid;
   this->password=password;
-  this->service=service;
+  this->serviceURI=service;
 }
 
-
-void httpService::connectToWifi(const char* ssid, const char* password){
+void httpService::connectToWifi(char* ssid, char* password){
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
   while(WiFi.status() != WL_CONNECTED) {
@@ -22,7 +21,7 @@ void httpService::connectToWifi(const char* ssid, const char* password){
 }
 
 void httpService::on() { 
-  connectToWifi(ssid, password);
+  connectToWifi(this->ssid, this->password);
 }
 //va aggiunto la luminosità
 int httpService::sendData(String address, float temp,float light, String place){  
