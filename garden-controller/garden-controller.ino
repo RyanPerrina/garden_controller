@@ -25,7 +25,6 @@ void setup() {
   servo = new ServoMotorImpl(PIN_SERVO);
 
   fsm = new GardenControllerFSM(l1, l2, l3, l4, servo);
-
 }
 
 void loop() {
