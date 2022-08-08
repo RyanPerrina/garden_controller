@@ -3,15 +3,22 @@
 #include "Photoresistor.h"
 #include "TemperatureSensor.h"
 #include <HTTPClient.h>
+#include <WiFi.h>
 
 // sensor pins
 #define PIN_TEMP 34
 #define PIN_LED 35
 #define PIN_PHOTO 32
 
+/* WiFi Ryan
 const char* ssid = "Mi10";
 const char* password = "12345678";
-const char* serviceURI = "";
+*/
+/* WiFi HDavi */
+const char* ssid = "TIM-90212215";
+const char* password = "4s07Twc1U7Iu7CfTJ4a7wXGq";
+const char* serviceURI = "localhost";
+
 TemperatureSensor *temp;
 Led *led;
 Photoresistor *photo;
@@ -35,20 +42,18 @@ int sendData(String address, float temp, float light, String place){
    http.addHeader("Content-Type", "application/json");    
     
    String msg = 
-    String("{ \"value\": ") + String(temp) + 
-    ", \"place\": \"" + place +"\" }";
+    String("{ \"temp\": ") + String(temp) + " \"light\": "
+    + String(light) + ", \"place\": \"" + place +"\" }";
    
    int retCode = http.POST(msg);
-   
-   http.end();  
-      
+   http.end();
    return retCode;
 }
 
-void send(int t, int l) {
+void send(float t, float l) {
   if (WiFi.status()== WL_CONNECTED){      
 
-    int code = sendData(serviceURI, t ,l , "home");
+    int code = sendData(serviceURI, t, l, "home");
     if (code == 200){
        Serial.println("Ok");   
      } else {
@@ -64,43 +69,14 @@ void send(int t, int l) {
 }
 
 void setup() {
+  Serial.begin(115200);
   //temp = new TemperatureSensor(PIN_TEMP);
   //led = new Led(PIN_LED);
   //photo = new Photoresistor(PIN_PHOTO);
-  Serial.println("CIAO BRO PRIMA");
   connectToWifi(ssid, password);
-  Serial.println("CIAO BRO DOPO");
 }
 
 void loop() {
-  delay(10000);
   //send(temp -> getTemperature(), photo -> getLight());
-  if(WiFi.status()== WL_CONNECTED){      
-    HTTPClient http;
-  
-    // Your Domain name with URL path or IP address with path
-    http.begin(serverPath);
-      
-    // Send HTTP GET request
-    int httpResponseCode = http.GET();
-      
-    if (httpResponseCode>0) {
-      Serial.print("HTTP Response code: ");
-      Serial.println(httpResponseCode);
-      String payload = http.getString();
-      Serial.println(payload);
-    } else {
-      Serial.print("Error code: ");
-      Serial.println(httpResponseCode);
-    }
-    
-    // Free resources
-    http.end();
-
-    delay(2000);
-
-  } else {
-    Serial.println("WiFi Disconnected... Reconnect.");
-    connectToWifi(ssid, password);
-  }
+  send(0, 0);
 }
