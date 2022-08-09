@@ -19,7 +19,7 @@ AnalogLed *l3;
 AnalogLed *l4;
 GardenControllerFSM *fsm;
 IrrigationSystem *irr;
-enum { NO_EVENT, LED_1, LED_2, LED_3, LED_4, IRRIGATE } event;
+EventType eventType;
 
 void setup() {
   Serial.begin(9600);
@@ -32,7 +32,7 @@ void setup() {
 
   fsm = new GardenControllerFSM(l1, l2, l3, l4, servo);
   irr = new IrrigationSystem(PIN_SERVO);
-  event = NO_EVENT;
+  eventType = NO_EVENT;
 }
 
 void loop() {
@@ -46,6 +46,7 @@ void loop() {
     //}
   }
 
-  Event *e = new Event(event);
+  Event *e = new Event(eventType);
   fsm -> handleEvent(e);
+  eventType = NO_EVENT;
 }
