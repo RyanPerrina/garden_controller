@@ -9,9 +9,11 @@ public:
   Led(int pin);
   void switchOn();
   void switchOff();
+  void toggle();
   
 private:
-  int pin;  
+  int pin;
+  bool isOn;
 };
 
 #endif
