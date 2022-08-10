@@ -10,14 +10,20 @@
 #define PIN_LED 35
 #define PIN_PHOTO 32
 
-/* WiFi Ryan
+/* WiFi Ryan*/
+/*
 const char* ssid = "Mi10";
 const char* password = "12345678";
 */
-/* WiFi HDavi */
+/* WiFi HDavi casa */
+/*
 const char* ssid = "TIM-90212215";
 const char* password = "4s07Twc1U7Iu7CfTJ4a7wXGq";
-const char* serviceURI = "localhost";
+*/
+/* WiFi HDavi telefono */
+const char* ssid = "HDavi";
+const char* password = "Thegreatd12!";
+const char* serviceURI = "http://3a0b-5-90-198-245.eu.ngrok.io";
 
 TemperatureSensor *temp;
 Led *led;
@@ -38,8 +44,8 @@ void connectToWifi(const char* ssid, const char* password){
 int sendData(String address, float temp, float light, String place){  
   
    HTTPClient http;    
-   http.begin(address + "/api/data");      
-   http.addHeader("Content-Type", "application/json");    
+   http.begin(address + "/api/data");
+   //http.addHeader("Content-Type", "application/json");    
     
    String msg = 
     String("{ \"temp\": ") + String(temp) + " \"light\": "
