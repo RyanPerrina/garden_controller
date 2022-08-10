@@ -6,11 +6,13 @@
 #include "AnalogLed.h"
 #include "ServoMotorImpl.h"
 
-class GardenControllerFSM : AsyncFSM{
+class GardenControllerFSM : public AsyncFSM{
 
 public:
   GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, AnalogLed *l4, ServoMotorImpl *servo);
   void handleEvent(Event *e);
+  void checkEvents();
+
 
 private:
   Led *l1;
@@ -18,7 +20,7 @@ private:
   AnalogLed *l3;
   AnalogLed *l4;
   ServoMotorImpl *servo;
-  enum { AUTO, MANUAL, ALARM } state;
+  enum class State { AUTO, MANUAL, ALARM }  state;
 };
 
 
