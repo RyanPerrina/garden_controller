@@ -19,7 +19,11 @@ void GardenControllerFSM :: handleEvent(Event *e){
 
   switch(this->state){
     case State::AUTO:
-      Serial.println("ciao");
+      if(e->getType() == 1){
+        Serial.println("messaggio ricevuto da seriale");
+      } else if(e->getType() == 2){
+        Serial.println("messaggio bluetooth ricevuto");
+      }
       break;
 
     case State::MANUAL:

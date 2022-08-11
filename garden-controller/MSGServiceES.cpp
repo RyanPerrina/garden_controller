@@ -12,7 +12,6 @@ void MsgServiceClassES::init(Observer* observer){
     EventSource::registerObserver(observer);
 }
 void MsgServiceClassES::checkMSG(){
-   //TODO:ritorna sempre false quiindi non entra mai e non genera mai evento. Sistemare qui.
     if(isMsgAvailable()){
         EventSource::generateEvent(new ControlEventAuto(this));
         receiveMsg();
