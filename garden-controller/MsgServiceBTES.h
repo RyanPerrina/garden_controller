@@ -11,5 +11,6 @@ class MsgServiceBTES : public EventSource, public MsgServiceBT{
         void notifyInterrupt(int pin);
 };
 
+extern MsgServiceBTES MsgServiceBt;
 
 #endif

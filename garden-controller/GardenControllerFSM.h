@@ -20,6 +20,7 @@ private:
   AnalogLed *l3;
   AnalogLed *l4;
   ServoMotorImpl *servo;
+  
   enum class State { AUTO, MANUAL, ALARM }  state;
 };
 

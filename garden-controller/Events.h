@@ -3,6 +3,9 @@
 #include "async_fsm.h"
 #include "MSGServiceES.h"
 #include "MsgServiceBTES.h"
+#define MANUALMODEREQUESTEVENT 3
+#define ACKMANUAMODEOKEVENT 4
+#define LED1ONOFFEVENT 5
 
 class ControlEventAuto : public Event {
 

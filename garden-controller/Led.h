@@ -9,9 +9,11 @@ public:
   Led(int pin);
   void switchOn();
   void switchOff();
+  bool isLedOn();
   
 private:
   int pin;  
+  enum LedState { ON,OFF} state;
 };
 
 #endif

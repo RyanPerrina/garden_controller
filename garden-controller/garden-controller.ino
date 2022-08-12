@@ -30,6 +30,9 @@ void loop() {
   MsgServiceEs.checkMSG();
   MsgServiceBt.checkMSG();
   fsm->checkEvents();
+  //TODO:metodo tipo fsm->executestuff() e lui fa cose che deve fare periodicamente come aggiornare sistema di irrigazione fino a che evento sopracciunge? o meglio task
+  // MsgServiceBt.sendMsg(Msg("MANUAL MODE ON"));
+
 
 }
 
