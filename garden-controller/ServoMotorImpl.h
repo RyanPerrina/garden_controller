@@ -5,6 +5,8 @@
 #include "ServoTimer2.h"
 #include <Arduino.h>
 
+
+
 class ServoMotorImpl: public ServoMotor {
 
 public:
@@ -13,10 +15,23 @@ public:
   void on();
   void setPosition(int angle);
   void off();
+  bool isOn();
+  void update();
+  void setSpeed(int newSpeed);
+  void increaseSpeed();
+  void decreaseSpeed();
+
     
 protected:
   int pin; 
-  ServoTimer2 motor; 
+  ServoTimer2* servo; 
+  const int maxPulseWidth = 2250;
+  const int minPulseWidth = 750;
+  int speed;
+  enum State {ON,OFF} state;
+  int degree;
+  int increment;
+  void updatePosition();
 };
 
 #endif

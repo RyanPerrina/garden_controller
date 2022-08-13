@@ -19,6 +19,19 @@ void GardenControllerFSM::checkEvents()
   AsyncFSM::checkEvents();
 }
 
+void GardenControllerFSM::execRuotine(){
+  switch (this->state){
+    case State::AUTO:
+      this->servo->update();
+      break;
+    case State::MANUAL:
+      this->servo->update();
+      break;
+    case State::ALARM:
+      break;
+  }
+}
+
 void GardenControllerFSM ::handleEvent(Event *e)
 {
 

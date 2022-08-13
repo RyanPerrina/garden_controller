@@ -12,6 +12,7 @@ public:
   GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, AnalogLed *l4, ServoMotorImpl *servo);
   void handleEvent(Event *e);
   void checkEvents();
+  void execRuotine();
 
 
 private:
