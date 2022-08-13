@@ -5,6 +5,8 @@
 #include <TimerOne.h>
 #include "ServoMotorImpl.h"
 #include "async_fsm.h"
+#define MAXSPEED 4
+#define MINSPEED 0
 
 class IrrigationSystem {
 
@@ -14,6 +16,9 @@ public:
   void setSpeed(int newSpeed);
   void increaseSpeed();
   void decreaseSpeed();
+  bool isOn();
+  void onOff();
+  int getSpeed();
 
  
 private:

@@ -22,7 +22,7 @@ void IrrigationSystem::update(){
   }
   updatePosition();
   this->servo->setPosition(this->degree);
-  delay(25*(this->speed+1));
+  delay(10*(MAXSPEED - this->speed+1));
 }
 
 void IrrigationSystem::updatePosition(){
@@ -33,7 +33,7 @@ void IrrigationSystem::updatePosition(){
 }
 
 void IrrigationSystem::setSpeed(int newSpeed){
-  if(newSpeed<0 || newSpeed>4){return;}
+  if(newSpeed<MINSPEED || newSpeed>MAXSPEED){return;}
   this->speed = newSpeed;
 }
 
@@ -46,3 +46,19 @@ void IrrigationSystem::decreaseSpeed(){
   setSpeed(newSpeed);
 
 };
+
+bool IrrigationSystem::isOn(){
+  return this->servo->isOn();
+}
+
+void IrrigationSystem::onOff(){
+  if(isOn()){
+    this->servo->off();
+  } else {
+    this->servo->on();
+  }
+}
+
+int IrrigationSystem::getSpeed(){
+  return this->speed;
+}

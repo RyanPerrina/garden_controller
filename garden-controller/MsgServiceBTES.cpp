@@ -4,13 +4,22 @@
 enum Options{
     LED1ONOFF,
     MANUALMODEREQ,
-    ACKMANUALMODEON
+    ACKMANUALMODEON,
+    LED2ONOFF,
+    IRRIGATIONONOFF,
+    IRRIGATIONSPEEDUP,
+    IRRIGATIONSPEEDDOWN
 };
 
 Options resolveOption(String str){
     if(str == "LED1: ON/OFF"){ return Options::LED1ONOFF;}
     if(str == "MANUAL MODE REQUEST"){ return Options::MANUALMODEREQ;}
     if(str == "ACK MANUAL MODE ON"){ return Options::ACKMANUALMODEON;}
+    if(str == "LED2: ON/OFF"){ return Options::LED2ONOFF;}
+    if(str == "IRRIGATION: ON/OFF"){ return Options::IRRIGATIONONOFF;}
+    if(str == "IRRIGATION: SPEED UP"){ return Options::IRRIGATIONSPEEDUP;}
+    if(str == "IRRIGATION: SPEED DOWN"){ return Options::IRRIGATIONSPEEDDOWN;}
+    
 
 }
 
@@ -35,8 +44,20 @@ void MsgServiceBTES::checkMSG(){
                 break;
             case Options::ACKMANUALMODEON : 
                 generateEvent(new Event(ACKMANUAMODEOKEVENT));
-                Serial.println("ok");
                 break;
+            case Options::LED2ONOFF:
+                generateEvent(new Event(LED2ONOFFEVENT));
+                break;
+            case Options::IRRIGATIONONOFF:
+                generateEvent(new Event(IRRIGATIONONOFFEVENT));
+                break;
+            case Options::IRRIGATIONSPEEDUP:
+                generateEvent(new Event(IRRIGATIONSPEEDUPEVENT));
+                break;
+            case Options::IRRIGATIONSPEEDDOWN:
+                generateEvent(new Event(IRRIGATIONSPEEDDOWNEVENT));
+                break;
+
         }
         //EventSource::generateEvent(new ControlEventManual(this));
     }

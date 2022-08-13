@@ -3,6 +3,7 @@
 #include "async_fsm.h"
 #include "Events.h"
 #include "MsgServiceBTES.h"
+#include <string.h>
 
 GardenControllerFSM ::GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, AnalogLed *l4, ServoMotorImpl *servo)
 {
@@ -62,7 +63,26 @@ void GardenControllerFSM ::handleEvent(Event *e)
           } else {
             this->l1->switchOn();
           }
+          break;
+        case LED2ONOFFEVENT : 
+          if(this->l2->isLedOn()){
+            this->l2->switchOff();
+          } else {
+            this->l2->switchOn();
+          }
         break;
+      case IRRIGATIONONOFFEVENT : 
+          this->irrigationSystem->onOff();
+        break;
+      case IRRIGATIONSPEEDUPEVENT : 
+          this->irrigationSystem->increaseSpeed();
+          //mettere ack?
+          MsgServiceBt.sendMsg(Msg("IRRIGATION SPEED: " + String(this->irrigationSystem->getSpeed())));
+          break;
+      case IRRIGATIONSPEEDDOWNEVENT:
+          this->irrigationSystem->decreaseSpeed();
+          MsgServiceBt.sendMsg(Msg("IRRIGATION SPEED: " + String(this->irrigationSystem->getSpeed())));
+          break;
     }
     break;
 
