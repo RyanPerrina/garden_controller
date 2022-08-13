@@ -5,6 +5,7 @@
 #include "Led.h"
 #include "AnalogLed.h"
 #include "ServoMotorImpl.h"
+#include "IrrigationSystem.h"
 
 class GardenControllerFSM : public AsyncFSM{
 
@@ -20,7 +21,7 @@ private:
   Led *l2;
   AnalogLed *l3;
   AnalogLed *l4;
-  ServoMotorImpl *servo;
+  IrrigationSystem * irrigationSystem;
   
   enum class State { AUTO, MANUAL, ALARM }  state;
 };

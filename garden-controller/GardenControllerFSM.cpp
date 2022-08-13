@@ -10,7 +10,7 @@ GardenControllerFSM ::GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, Analo
   this->l2 = l2;
   this->l3 = l3;
   this->l4 = l4;
-  this->servo = servo;
+  this->irrigationSystem = new IrrigationSystem(servo);
   this->state = State::AUTO;
 }
 
@@ -22,10 +22,10 @@ void GardenControllerFSM::checkEvents()
 void GardenControllerFSM::execRuotine(){
   switch (this->state){
     case State::AUTO:
-      this->servo->update();
+      this->irrigationSystem->update();
       break;
     case State::MANUAL:
-      this->servo->update();
+      this->irrigationSystem->update();
       break;
     case State::ALARM:
       break;
