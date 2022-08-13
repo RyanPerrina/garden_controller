@@ -8,7 +8,11 @@ enum Options{
     LED2ONOFF,
     IRRIGATIONONOFF,
     IRRIGATIONSPEEDUP,
-    IRRIGATIONSPEEDDOWN
+    IRRIGATIONSPEEDDOWN,
+    LED3INTENSITYDOWN,
+    LED3INTENSITYUP,
+    LED4INTENSITYDOWN,
+    LED4INTENSITYUP
 };
 
 Options resolveOption(String str){
@@ -19,6 +23,14 @@ Options resolveOption(String str){
     if(str == "IRRIGATION: ON/OFF"){ return Options::IRRIGATIONONOFF;}
     if(str == "IRRIGATION: SPEED UP"){ return Options::IRRIGATIONSPEEDUP;}
     if(str == "IRRIGATION: SPEED DOWN"){ return Options::IRRIGATIONSPEEDDOWN;}
+    if(str == "LED3: INTENSITY UP"){ return Options::LED3INTENSITYUP;}
+    if(str == "LED3: INTENSITY DOWN"){ return Options::LED3INTENSITYDOWN;}
+    if(str == "LED4: INTENSITY UP"){ return Options::LED4INTENSITYUP;}
+    if(str == "LED4: INTENSITY DOWN"){ return Options::LED4INTENSITYDOWN;}
+
+
+
+
     
 
 }
@@ -33,7 +45,9 @@ void MsgServiceBTES::init(Observer* observer){
 
 void MsgServiceBTES::checkMSG(){
     if(MsgServiceBT::isMsgAvailable()){
-        String msg = MsgServiceBT::receiveMsg()->getContent();
+        Msg * m = MsgServiceBT::receiveMsg();
+        String msg = m->getContent();
+        delete m;
         Serial.println(msg);
         switch(resolveOption(msg)) {
             case Options::LED1ONOFF:
@@ -56,6 +70,18 @@ void MsgServiceBTES::checkMSG(){
                 break;
             case Options::IRRIGATIONSPEEDDOWN:
                 generateEvent(new Event(IRRIGATIONSPEEDDOWNEVENT));
+                break;
+            case Options::LED3INTENSITYUP:
+                generateEvent(new Event(LED3INTENSITYUPEVENT));
+                break;
+            case Options::LED3INTENSITYDOWN:
+                generateEvent(new Event(LED3INTENSITYDOWNEVENT));
+                break;
+            case Options::LED4INTENSITYUP:
+                generateEvent(new Event(LED4INTENSITYUPEVENT));
+                break;
+            case Options::LED4INTENSITYDOWN:
+                generateEvent(new Event(LED4INTENSITYDOWNEVENT));
                 break;
 
         }

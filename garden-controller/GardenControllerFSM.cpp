@@ -83,6 +83,22 @@ void GardenControllerFSM ::handleEvent(Event *e)
           this->irrigationSystem->decreaseSpeed();
           MsgServiceBt.sendMsg(Msg("IRRIGATION SPEED: " + String(this->irrigationSystem->getSpeed())));
           break;
+      case LED3INTENSITYUPEVENT:
+          this->l3->increaseIntensity();
+          MsgServiceBt.sendMsg(Msg("LED3 INTENSITY: " + String(this->l3->getIntensity())));
+          break;
+      case LED3INTENSITYDOWNEVENT:
+          this->l3->decreaseIntensity();
+          MsgServiceBt.sendMsg(Msg("LED3 INTENSITY: " + String(this->l3->getIntensity())));
+          break;
+      case LED4INTENSITYUPEVENT:
+          this->l4->increaseIntensity();
+          MsgServiceBt.sendMsg(Msg("LED4 INTENSITY: " + String(this->l4->getIntensity())));
+          break;
+      case LED4INTENSITYDOWNEVENT:
+          this->l4->decreaseIntensity();
+          MsgServiceBt.sendMsg(Msg("LED4 INTENSITY: " + String(this->l4->getIntensity())));
+          break;
     }
     break;
 

@@ -8,9 +8,9 @@
 
 #define PIN_LED1 13
 #define PIN_LED2 12
-#define PIN_LED3 11
-#define PIN_LED4 10
-#define PIN_SERVO 6
+#define PIN_LED3 5
+#define PIN_LED4 6
+#define PIN_SERVO 3
 GardenControllerFSM *fsm;
 MsgServiceBTES MsgServiceBt(8,9);
 
