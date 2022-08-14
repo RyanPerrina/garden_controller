@@ -7,7 +7,7 @@
 #include <PubSubClient.h>
 
 #define MSG_BUFFER_SIZE  50
-#define MSG_TIME 10000
+#define MSG_TIME 5000
 
 // sensor pins
 #define PIN_TEMP 34
