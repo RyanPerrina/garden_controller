@@ -10,7 +10,7 @@ class Photoresistor{
 
 public:
   Photoresistor(int pin);
-  int getLight();
+  int getLuminosity();
 
 private:
   int pin;

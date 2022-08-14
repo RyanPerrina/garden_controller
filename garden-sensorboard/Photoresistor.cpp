@@ -5,8 +5,8 @@ Photoresistor :: Photoresistor(int pin){
   pinMode(this -> pin, INPUT);
 }
 
-int Photoresistor :: getLight(){
-  int light = map(analogRead(this -> pin), 0, 1023, 1, 8);
+int Photoresistor :: getLuminosity(){
+  int luminosity = map(analogRead(this -> pin), 0, 4096, 1, 8);
   delay(PERIOD);
-  return light;
+  return luminosity;
 }
