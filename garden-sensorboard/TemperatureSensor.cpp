@@ -3,11 +3,10 @@
 
 TemperatureSensor :: TemperatureSensor(int pin){
   this -> pin = pin;
+  pinMode(this -> pin, INPUT);
 }
 
-float TemperatureSensor :: getTemperature(){
-  int value = analogRead(this -> pin);
-  float value_in_mV = value * (5000 / 1024.0);     // value in mV
-  float value_in_C = (value_in_mV - 500) * 0.1;    // value in Celsius
-  return value_in_C;
+int TemperatureSensor :: getTemperature(){
+  int value = map(analogRead(this -> pin), 0, 4096, 1, 5);
+  return value;
 }
