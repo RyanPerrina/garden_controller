@@ -32,6 +32,7 @@ const char* password = "Thegreatd12!";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
+const char* topic = "smart-garden";
 
 /* MQTT client management */
 WiFiClient espClient;
@@ -65,7 +66,13 @@ void setup_wifi() {
 
 /* MQTT subscribing callback */
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.println(String("Message arrived on [") + topic + "] len: " + length );
+  String msg = String((char*) payload);
+  msg = msg.substring(0, length);
+  Serial.println(String("Received: ") + msg);
+
+  if (msg == "STOP_ALARM"){
+    led -> switchOn();
+  }
 }
 
 void reconnect() {
@@ -74,7 +81,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Create a random client ID
-    String clientId = String("esiot-2122-client-")+String(random(0xffff), HEX);
+    String clientId = String(topic)+String(random(0xffff), HEX);
 
     // Attempt to connect
     if (client.connect(clientId.c_str())) {
@@ -82,7 +89,7 @@ void reconnect() {
       // Once connected, publish an announcement...
       // client.publish("outTopic", "hello world");
       // ... and resubscribe
-      client.subscribe("esiot-2122");
+      client.subscribe(topic);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -119,12 +126,25 @@ void loop() {
     /* getting values from sensors */
     int luminosity = photo -> getLuminosity();
     int temperature = temp -> getTemperature();
+
+    /* check luminosity and temperature */
+    if (luminosity < 5){
+      snprintf (msg, MSG_BUFFER_SIZE, "ACTIVATE_LIGHT_SYSTEM");
+    }
+    if (luminosity < 2){
+      snprintf (msg, MSG_BUFFER_SIZE, "IRRIGATE");
+    }
+    if (temperature == 5){
+      snprintf (msg, MSG_BUFFER_SIZE, "ALARM");
+      led -> switchOff();
+    }
+    
     /* creating a msg in the buffer */
     snprintf (msg, MSG_BUFFER_SIZE, "L: %d - T: %d", luminosity, temperature);
 
-    Serial.println(String("Publishing message: ") + msg);
+    Serial.println(String("Sent: ") + msg);
     
     /* publishing the msg */
-    client.publish("esiot-2122", msg);  
+    client.publish(topic, msg);  
   }
 }
