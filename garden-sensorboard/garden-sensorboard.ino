@@ -21,8 +21,8 @@ const char* password = "12345678";
 */
 
 /* WiFi HDavi casa */
-const char* ssid = "TIM-90212215";
-const char* password = "4s07Twc1U7Iu7CfTJ4a7wXGq";
+const char* ssid = "FASTWEB-E25F13";
+const char* password = "$Andr0med06.";
 
 /* WiFi HDavi telefono */
 /*
@@ -110,7 +110,7 @@ void setup() {
   temp = new TemperatureSensor(PIN_TEMP);
   photo = new Photoresistor(PIN_PHOTO);
   led = new Led(PIN_LED);
-  led -> switchOn();
+  //led -> switchOff();
 }
 
 void loop() {

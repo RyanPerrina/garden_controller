@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Bluetooth Chat - Client</string>
+    <string name="require_manual_control_btnLabel">Require Manual Control</string>
+</resources>
