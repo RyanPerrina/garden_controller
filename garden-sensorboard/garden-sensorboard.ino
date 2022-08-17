@@ -44,7 +44,8 @@ Photoresistor *photo;
 Led *led;
 
 unsigned long lastMsgTime = 0;
-char msg[MSG_BUFFER_SIZE];
+//char msg[MSG_BUFFER_SIZE];
+String msg = "";
 
 void setup_wifi() {
   delay(10);
@@ -110,10 +111,11 @@ void setup() {
   temp = new TemperatureSensor(PIN_TEMP);
   photo = new Photoresistor(PIN_PHOTO);
   led = new Led(PIN_LED);
-  //led -> switchOff();
+  led -> switchOn();
 }
 
 void loop() {
+  msg = "";
   if (!client.connected()) {
     reconnect();
   }
@@ -128,23 +130,27 @@ void loop() {
     int temperature = temp -> getTemperature();
 
     /* check luminosity and temperature */
-    if (luminosity < 5){
-      snprintf (msg, MSG_BUFFER_SIZE, "ACTIVATE_LIGHT_SYSTEM");
-    }
-    if (luminosity < 2){
-      snprintf (msg, MSG_BUFFER_SIZE, "IRRIGATE");
-    }
-    if (temperature == 5){
-      snprintf (msg, MSG_BUFFER_SIZE, "ALARM");
-      led -> switchOff();
-    }
-    
+//    if (luminosity < 5){
+//      //snprintf (msg, MSG_BUFFER_SIZE, "ACTIVATE_LIGHT_SYSTEM");
+//      msg = msg + " ACTIVATE_LIGHT_SYSTEM ";
+//    }
+//    if (luminosity < 2){
+//      //snprintf (msg, MSG_BUFFER_SIZE, "IRRIGATE");
+//      msg = msg + " IRRIGATE ";
+//
+//    }
+//    if (temperature == 5 ){
+//      //snprintf (msg, MSG_BUFFER_SIZE, "ALARM");
+//      msg = msg + " ALARM ";
+//      led -> switchOff();
+//    }
+//    
     /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "L: %d - T: %d", luminosity, temperature);
-
+    //snprintf (msg, MSG_BUFFER_SIZE, "L: %d - T: %d", luminosity, temperature);
+    msg =  "L: " + String(luminosity) + " T: " + String(temperature) + "\n";
     Serial.println(String("Sent: ") + msg);
     
     /* publishing the msg */
-    client.publish(topic, msg);  
+    client.publish(topic, &msg[0]);  
   }
 }

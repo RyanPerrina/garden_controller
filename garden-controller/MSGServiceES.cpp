@@ -13,8 +13,10 @@ void MsgServiceClassES::init(Observer* observer){
 }
 void MsgServiceClassES::checkMSG(){
     if(isMsgAvailable()){
-        EventSource::generateEvent(new ControlEventAuto(this));
-        receiveMsg();
+        Msg* m = MsgServiceClass::receiveMsg();
+        String msg = m->getContent();
+        delete m;
+        generateEvent((Event*) new ControlEventAuto(this,msg));
     } 
 
 }

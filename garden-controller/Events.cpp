@@ -1,8 +1,13 @@
 #include "Events.h"
 
-ControlEventAuto::ControlEventAuto(MsgServiceClassES *source) : Event(1)
+ControlEventAuto::ControlEventAuto(MsgServiceClassES *source,String msg) : Event(CONTROLEVENTAUTO)
 {
     this->source = source;
+    this->msg = msg;
+}
+
+String ControlEventAuto::getMsg(){
+    return this->msg;
 }
 
 MsgServiceClassES *ControlEventAuto::getSource()

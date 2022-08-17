@@ -28,11 +28,6 @@ Options resolveOption(String str){
     if(str == "LED4: INTENSITY UP"){ return Options::LED4INTENSITYUP;}
     if(str == "LED4: INTENSITY DOWN"){ return Options::LED4INTENSITYDOWN;}
 
-
-
-
-    
-
 }
 
 MsgServiceBTES::MsgServiceBTES(int rxPin,int txPin):MsgServiceBT(rxPin,txPin){

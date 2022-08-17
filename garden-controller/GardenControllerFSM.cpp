@@ -40,11 +40,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
   switch (this->state)
   {
   case State::AUTO:
-    // if(e->getType() == 1){
-    //   Serial.println("messaggio ricevuto da seriale");
-    // } else if(e->getType() == 2){
-    //   Serial.println("messaggio bluetooth ricevuto");
-    // } else
+    
     switch (e->getType())
     {
     case MANUALMODEREQUESTEVENT:
@@ -52,6 +48,25 @@ void GardenControllerFSM ::handleEvent(Event *e)
       break;
     case ACKMANUAMODEOKEVENT:
       this->state = State::MANUAL;
+      break;
+    case CONTROLEVENTAUTO:
+      ControlEventAuto* eventAuto = (ControlEventAuto*) e;
+      String msg = eventAuto->getMsg();
+      if(msg.indexOf("LED1ON LED2ON") != -1){
+        this->l1->switchOn();
+        this->l2->switchOn();
+      } else {
+        this->l1->switchOff();
+        this->l2->switchOff();
+      }
+      int index = msg.indexOf("LED34:");
+      if( index != -1){
+        int intensity = msg.substring(index+String("LED34:").length(),index+String("LED34:").length()+1).toInt();
+        this->l3->setIntensity(intensity);
+        this->l4->setIntensity(intensity);
+      }
+      //aggiungere parte con irrigazione e parte con allarme.
+      //timer che scatta dopo tot secondi che ferma l irrigazione e lo manda in stop.
       break;
     }
     break;

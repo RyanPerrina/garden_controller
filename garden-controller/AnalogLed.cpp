@@ -32,6 +32,8 @@ void AnalogLed ::setIntensity(int intensity)
   if (intensity == MININTENSITY)
   {
     this->state = State::OFF;
+  } else {
+    this->state = State::ON;
   }
   this->intensity = intensity;
   int analogIntensity = map(intensity, MININTENSITY, MAXINTENSITY, 0, 255);

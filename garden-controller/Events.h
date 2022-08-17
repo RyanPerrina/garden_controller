@@ -3,6 +3,7 @@
 #include "async_fsm.h"
 #include "MSGServiceES.h"
 #include "MsgServiceBTES.h"
+#define CONTROLEVENTAUTO 1
 #define MANUALMODEREQUESTEVENT 3
 #define ACKMANUAMODEOKEVENT 4
 #define LED1ONOFFEVENT 5
@@ -18,12 +19,14 @@
 class ControlEventAuto : public Event {
 
     public:
-        ControlEventAuto(MsgServiceClassES* source);
+        ControlEventAuto(MsgServiceClassES* source,String msg);
 
         MsgServiceClassES* getSource();
+        String getMsg();
     
     private:
         MsgServiceClassES* source;
+        String msg;
 
 };
 
