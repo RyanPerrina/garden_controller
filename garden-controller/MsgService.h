@@ -34,10 +34,9 @@ public:
   Msg* receiveMsg();
 
   bool isMsgAvailable(Pattern& pattern);
-
-  /* note: message deallocation is responsibility of the client */
   Msg* receiveMsg(Pattern& pattern);
   
+  void sendMsg(const Msg& msg);
   void sendMsg(const String& msg);
 };
 

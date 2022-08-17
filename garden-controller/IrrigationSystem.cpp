@@ -3,38 +3,63 @@
 #define IRRIGATE_TIME 5000
 #define SLEEP_TIME 60000
 
-IrrigationSystem::IrrigationSystem(int pin):ServoMotorImpl(pin) {
-  this -> pin = pin;
-  this -> speed = 0;
-  this -> pos = 0;
-  this -> direction = 1;
-  
-  this -> on();
-  this -> setPosition(0);
-  delay(1000);
-  this -> off();
+
+IrrigationSystem::IrrigationSystem(ServoMotorImpl* servo){
+  this->servo = servo;
+  this->degree = 0;
+  this->speed = 0;
+  this->increment = 1;
+  this->servo->on();
+  this->servo->setPosition(this->degree);
+  delay(100);
+  this->servo->off();
+  //comment :
+  //this->servo->on();
 }
 
-void IrrigationSystem :: setSpeed(int value){
-  this -> speed = value;
-}
-
-void IrrigationSystem :: irrigate(){
-  this -> on();
-
-  double start = millis();
-  bool timeElapsed = false;
-  while(!timeElapsed){
-    this -> pos = this -> pos + this -> direction;
-    if (this -> pos == 0 || this -> pos == 180){
-      this -> direction = -this -> direction;
-    }
-    if(millis() - start >= IRRIGATE_TIME){
-      timeElapsed = true;
-    }
-    this -> setPosition(this -> pos);
-    delay(20 / this -> speed);
+void IrrigationSystem::update(){
+  if(!this->servo->isOn()){
+    return;
   }
-  
-  this -> off();
+  updatePosition();
+  this->servo->setPosition(this->degree);
+  delay(10*(MAXSPEED - this->speed+1));
+}
+
+void IrrigationSystem::updatePosition(){
+  if((this->increment == 1 && this->degree>=180) || (this->increment == -1 and this->degree<=0)){
+    this->increment *= -1;
+  } 
+  this->degree += this->increment;
+}
+
+void IrrigationSystem::setSpeed(int newSpeed){
+  if(newSpeed<MINSPEED || newSpeed>MAXSPEED){return;}
+  this->speed = newSpeed;
+}
+
+void IrrigationSystem::increaseSpeed(){
+  int newSpeed = this->speed + 1;
+  setSpeed(newSpeed);
+};
+void IrrigationSystem::decreaseSpeed(){
+  int newSpeed = this->speed - 1;
+  setSpeed(newSpeed);
+
+};
+
+bool IrrigationSystem::isOn(){
+  return this->servo->isOn();
+}
+
+void IrrigationSystem::onOff(){
+  if(isOn()){
+    this->servo->off();
+  } else {
+    this->servo->on();
+  }
+}
+
+int IrrigationSystem::getSpeed(){
+  return this->speed;
 }

@@ -3,17 +3,23 @@
 
 #include "Light.h"
 
-class Led: public Light { 
-  
+class Led : public Light
+{
+
 public:
   Led(int pin);
   void switchOn();
   void switchOff();
-  void toggle();
-  
+
+  bool isLedOn();
+
 private:
   int pin;
-  bool isOn;
+  enum LedState
+  {
+    ON,
+    OFF
+  } state;
 };
 
 #endif
