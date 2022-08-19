@@ -94,6 +94,10 @@ void GardenControllerFSM ::handleEvent(Event *e)
 
   case State::MANUAL:
     switch(e->getType()){
+        case DISABLEMANUALMODEEVENT:
+          this->state = State::AUTO;
+          MsgServiceBt.sendMsg(Msg("AUTOMODEENABLED"));
+          break;
         case LED1ONOFFEVENT : 
           if(this->l1->isLedOn()){
             this->l1->switchOff();
@@ -140,7 +144,15 @@ void GardenControllerFSM ::handleEvent(Event *e)
     break;
 
   case State::ALARM:
-    Serial.println("alarm");
+    switch(e->getType()){
+          case MANUALMODEREQUESTEVENT:
+          MsgServiceBt.sendMsg(Msg("ALARM"));
+          break;
+          case DISABLEALARMEVENT:
+          this->state = State::AUTO;
+          MsgServiceBt.sendMsg(Msg("ALARM DISABLED"));
+          break;
+    }
     break;
   }
 }

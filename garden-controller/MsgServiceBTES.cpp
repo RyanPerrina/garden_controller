@@ -12,7 +12,9 @@ enum Options{
     LED3INTENSITYDOWN,
     LED3INTENSITYUP,
     LED4INTENSITYDOWN,
-    LED4INTENSITYUP
+    LED4INTENSITYUP,
+    DISABLEMANUALMODE,
+    DISABLEALARM
 };
 
 Options resolveOption(String str){
@@ -27,6 +29,9 @@ Options resolveOption(String str){
     if(str == "LED3: INTENSITY DOWN"){ return Options::LED3INTENSITYDOWN;}
     if(str == "LED4: INTENSITY UP"){ return Options::LED4INTENSITYUP;}
     if(str == "LED4: INTENSITY DOWN"){ return Options::LED4INTENSITYDOWN;}
+    if(str == "DISABLEMANUALMODE"){ return Options::DISABLEMANUALMODE;}
+    if(str == "DISABLEALARM"){ return Options::DISABLEALARM;}
+
 
 }
 
@@ -78,7 +83,12 @@ void MsgServiceBTES::checkMSG(){
             case Options::LED4INTENSITYDOWN:
                 generateEvent(new Event(LED4INTENSITYDOWNEVENT));
                 break;
-
+            case Options::DISABLEMANUALMODE:
+                generateEvent(new Event(DISABLEMANUALMODEEVENT));
+                break;
+            case Options::DISABLEALARM:
+                generateEvent(new Event(DISABLEALARMEVENT));
+                break;
         }
         //EventSource::generateEvent(new ControlEventManual(this));
     }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import unibo.btclient.utils.C;
 public class MainActivity extends AppCompatActivity {
     private BluetoothChannel btChannel;
     private boolean manualModeEnabled = false;
+    private boolean alarmEnabled = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        findViewById(R.id.disableManualModeBtn).setEnabled(false);
+        findViewById(R.id.alarmBtn).setEnabled(false);
         findViewById(R.id.requireManualModeBtn).setOnClickListener(l -> {
             l.setEnabled(false);
             try {
@@ -67,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        if(manualModeEnabled){
+            sendMessage("DISABLEMANUALMODE");
+        }
         btChannel.close();
     }
 
@@ -97,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     serverDevice.getName()
                 ));
                 findViewById(R.id.requireManualModeBtn).setEnabled(false);
-
+                findViewById(R.id.disableManualModeBtn).setEnabled(true);
                 btChannel = channel;
                 btChannel.registerListener(new RealBluetoothChannel.Listener() {
                     @Override
@@ -120,6 +127,27 @@ public class MainActivity extends AppCompatActivity {
                         if(receivedMessage.startsWith("LED4 INTENSITY: ")){
                             String speedStr = receivedMessage.substring("LED4 INTENSITY: ".length(),receivedMessage.length()-1);
                             ((TextView)findViewById(R.id.led4TxtView)).setText(speedStr);
+                        }
+                        if(receivedMessage.startsWith("AUTOMODEENABLED")){
+                            manualModeEnabled = false;
+                            ((Button)findViewById(R.id.requireManualModeBtn)).setEnabled(true);
+                            ((TextView)findViewById(R.id.statusLabel)).setText("no connection");
+                            findViewById(R.id.disableManualModeBtn).setEnabled(false);
+                            channel.close();
+                        }
+                        if(receivedMessage.startsWith("ALARM")){
+                            findViewById(R.id.alarmBtn).setEnabled(true);
+                            findViewById(R.id.disableManualModeBtn).setEnabled(false);
+                            alarmEnabled = true;
+                        }
+                        if(receivedMessage.startsWith("ALARM DISABLED")){
+                            findViewById(R.id.alarmBtn).setEnabled(false);
+                            alarmEnabled = false;
+                            ((Button)findViewById(R.id.requireManualModeBtn)).setEnabled(true);
+                            btChannel.close();
+                            ((TextView)findViewById(R.id.statusLabel)).setText("no connection");
+
+
                         }
 
 
@@ -154,6 +182,10 @@ public class MainActivity extends AppCompatActivity {
             btChannel.sendMessage(txt);
             Log.d("sent message",this.getClass().getSimpleName());
         }
+    }
+
+    private void disableAlarm(){
+        btChannel.sendMessage("DISABLEALARM");
     }
 
     public void led1btnHandler(View view) {
@@ -198,5 +230,13 @@ public class MainActivity extends AppCompatActivity {
     public void led4intensityDownHandler(View view) {
         sendMessage("LED4: INTENSITY DOWN");
 
+    }
+
+    public void disableManualControl(View view) {
+        sendMessage("DISABLEMANUALMODE");
+    }
+
+    public void disableAlarmHandler(View view) {
+        disableAlarm();
     }
 }
