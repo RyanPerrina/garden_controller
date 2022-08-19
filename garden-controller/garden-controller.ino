@@ -14,7 +14,8 @@
 #define PIN_SERVO 3
 GardenControllerFSM *fsm;
 
-MsgServiceBTES MsgServiceBt(8,9);
+
+MsgServiceBTES MsgServiceBt(7,8);
 
 void setup() {
   Led *l1 = new Led(PIN_LED1);
@@ -35,8 +36,6 @@ void loop() {
   fsm->execRuotine();
   //TODO:metodo tipo fsm->executestuff() e lui fa cose che deve fare periodicamente come aggiornare sistema di irrigazione fino a che evento sopracciunge? o meglio task
   // MsgServiceBt.sendMsg(Msg("MANUAL MODE ON"));
-
-
 
   }
 

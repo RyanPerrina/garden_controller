@@ -65,6 +65,11 @@ void GardenControllerFSM ::handleEvent(Event *e)
         this->l3->setIntensity(intensity);
         this->l4->setIntensity(intensity);
       }
+      index = msg.indexOf("IRRIGATION");
+      if( index != -1){
+        //
+      }
+      
       //aggiungere parte con irrigazione e parte con allarme.
       //timer che scatta dopo tot secondi che ferma l irrigazione e lo manda in stop.
       break;

@@ -3,7 +3,7 @@
 
 
 MsgServiceBT::MsgServiceBT(int rxPin, int txPin){
-  channel = new AltSoftSerial(rxPin, txPin);
+  channel = new SoftwareSerial(rxPin, txPin);
 }
 
 void MsgServiceBT::init(){

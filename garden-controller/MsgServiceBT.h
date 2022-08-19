@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "AltSoftSerial.h"
+#include <SoftwareSerial.h>
 #include "MsgService.h"
 class MsgServiceBT {
     
@@ -16,7 +17,7 @@ public:
 private:
   String content;
   Msg* availableMsg;
-  AltSoftSerial* channel;
+  SoftwareSerial* channel;
   
 };
 

@@ -19,6 +19,7 @@ public:
   bool isOn();
   void onOff();
   int getSpeed();
+  bool isInPause();
 
  
 private:
@@ -27,6 +28,7 @@ private:
   int degree;
   ServoMotorImpl* servo;
   void updatePosition();
+  enum State {ON,OFF,PAUSE} state;
 };
 
 #endif

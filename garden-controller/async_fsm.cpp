@@ -1,5 +1,8 @@
 #include "async_fsm.h"
 #include "Arduino.h"
+#define EI_NOTPORTC
+#define EI_NOTPORTB
+#define EI_NOTPORTD
 #include "EnableInterrupt.h"
 
 #define MAX_EVQUEUE_SIZE 20 
