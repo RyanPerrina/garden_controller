@@ -20,6 +20,8 @@ public:
   void onOff();
   int getSpeed();
   bool isInPause();
+  void on();
+  void off();
 
  
 private:

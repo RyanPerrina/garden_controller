@@ -65,13 +65,29 @@ void GardenControllerFSM ::handleEvent(Event *e)
         this->l3->setIntensity(intensity);
         this->l4->setIntensity(intensity);
       }
-      index = msg.indexOf("IRRIGATION");
-      if( index != -1){
-        //
+
+      //testare da qui
+      index = msg.indexOf("IRRIGATIONON");
+      if( index != -1 && !this->irrigationSystem->isInPause() && !this->irrigationSystem->isOn() ){
+        this->irrigationSystem->on();
+      } 
+
+      index = msg.indexOf("IRRIGATIONOFF");
+      if(index != -1){
+        this->irrigationSystem->off();
       }
-      
-      //aggiungere parte con irrigazione e parte con allarme.
-      //timer che scatta dopo tot secondi che ferma l irrigazione e lo manda in stop.
+
+      index = msg.indexOf("SPEED:");
+      if(index!=-1){
+         int speed = msg.substring(index+String("SPEED:").length(),index+String("SPEED:").length()+1).toInt();
+         this->irrigationSystem->setSpeed(speed);
+      }
+
+      index = msg.indexOf("TEMPERATURECHECK");
+      if(index != -1  && this->irrigationSystem->isInPause() ){
+        this->state = State::ALARM;
+        this->irrigationSystem->off();
+      }
       break;
     }
     break;
@@ -124,6 +140,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
     break;
 
   case State::ALARM:
+    Serial.println("alarm");
     break;
   }
 }

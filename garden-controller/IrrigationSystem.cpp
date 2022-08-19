@@ -10,7 +10,8 @@ volatile int count = 0;
 void stopIrrigationRoutine();
 void exitPauseRoutine();
 
-IrrigationSystem::IrrigationSystem(ServoMotorImpl* servo){
+IrrigationSystem::IrrigationSystem(ServoMotorImpl *servo)
+{
   this->servo = servo;
   this->degree = 0;
   this->speed = 0;
@@ -20,11 +21,12 @@ IrrigationSystem::IrrigationSystem(ServoMotorImpl* servo){
   delay(100);
   this->servo->off();
   this->state = State::OFF;
-  //comment :
-  //this->servo->on();
+  // comment :
+  // this->servo->on();
 }
 
-void IrrigationSystem::update(){
+void IrrigationSystem::update()
+{
   // if(!this->servo->isOn()){
   //   return;
   // }
@@ -38,7 +40,8 @@ void IrrigationSystem::update(){
     return;
     break;
   case State::ON:
-    if(stopped){
+    if (stopped)
+    {
       this->state = State::PAUSE;
       Timer1.attachInterrupt(exitPauseRoutine);
       Timer1.restart();
@@ -46,79 +49,108 @@ void IrrigationSystem::update(){
     }
     updatePosition();
     this->servo->setPosition(this->degree);
-    delay(10*(MAXSPEED - this->speed+1));
+    delay(10 * (MAXSPEED - this->speed + 1));
     break;
   case State::PAUSE:
-    if(!stopped){
+    if (!stopped)
+    {
       this->state = State::ON;
       Timer1.attachInterrupt(stopIrrigationRoutine);
       Timer1.restart();
-    } 
+    }
     break;
   default:
     break;
   }
 }
 
-void IrrigationSystem::updatePosition(){
-  if((this->increment == 1 && this->degree>=180) || (this->increment == -1 and this->degree<=0)){
+void IrrigationSystem::updatePosition()
+{
+  if ((this->increment == 1 && this->degree >= 180) || (this->increment == -1 and this->degree <= 0))
+  {
     this->increment *= -1;
-  } 
+  }
   this->degree += this->increment;
 }
 
-void IrrigationSystem::setSpeed(int newSpeed){
-  if(newSpeed<MINSPEED || newSpeed>MAXSPEED){return;}
+void IrrigationSystem::setSpeed(int newSpeed)
+{
+  if (newSpeed < MINSPEED || newSpeed > MAXSPEED)
+  {
+    return;
+  }
   this->speed = newSpeed;
 }
 
-void IrrigationSystem::increaseSpeed(){
+void IrrigationSystem::increaseSpeed()
+{
   setSpeed(this->speed + 1);
 };
-void IrrigationSystem::decreaseSpeed(){
+void IrrigationSystem::decreaseSpeed()
+{
   setSpeed(this->speed - 1);
-
 };
 
-bool IrrigationSystem::isOn(){
+bool IrrigationSystem::isOn()
+{
   return this->state == State::ON;
 }
 
-bool IrrigationSystem::isInPause(){
+bool IrrigationSystem::isInPause()
+{
   return this->state == State::PAUSE;
 }
 
-void IrrigationSystem::onOff(){
-  if(isOn() ){
-    this->state = State::OFF;
-    this->servo->off();
-    Timer1.stop();
-    count = 0;
-  } else {
-    count = 0;
-    stopped = false;
-    this->state = State::ON;
-    this->servo->on();
-    Timer1.initialize();
-    Timer1.attachInterrupt(stopIrrigationRoutine);
+void IrrigationSystem::onOff()
+{
+  if (isOn())
+  {
+    off();
+  }
+  else
+  {
+    on();
   }
 }
 
-int IrrigationSystem::getSpeed(){
+void IrrigationSystem::off()
+{
+  this->state = State::OFF;
+  this->servo->off();
+  Timer1.stop();
+  count = 0;
+}
+
+void IrrigationSystem::on()
+{
+  count = 0;
+  stopped = false;
+  this->state = State::ON;
+  this->servo->on();
+  Timer1.initialize();
+  Timer1.attachInterrupt(stopIrrigationRoutine);
+}
+
+int IrrigationSystem::getSpeed()
+{
   return this->speed;
 }
 
-void stopIrrigationRoutine(){
-  count+=1;
-  if(count>=IRRIGATE_TIME){
+void stopIrrigationRoutine()
+{
+  count += 1;
+  if (count >= IRRIGATE_TIME)
+  {
     count = 0;
     stopped = true;
   }
 }
 
-void exitPauseRoutine(){
-  count+=1;
-  if(count>=SLEEP_TIME){
+void exitPauseRoutine()
+{
+  count += 1;
+  if (count >= SLEEP_TIME)
+  {
     count = 0;
     stopped = false;
   }
