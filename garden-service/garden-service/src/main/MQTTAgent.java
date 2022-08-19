@@ -74,7 +74,7 @@ public class MQTTAgent extends AbstractVerticle {
         if(luminosity<2){
             msg += " IRRIGATIONON";
         } else {
-            msg+= " IRRIGATIONOFF"
+            msg+= " IRRIGATIONOFF";
         }
         msg += " SPEED:" + String.valueOf(temperature);
 
@@ -82,7 +82,7 @@ public class MQTTAgent extends AbstractVerticle {
             msg += " TEMPERATURECHECK";
         }
         System.out.println(msg);
-        //channel.sendMsg(msg);
-        channel.sendMsg("IRRIGATIONON SPEED:3");
+        channel.sendMsg(msg);
+        //channel.sendMsg("IRRIGATIONON SPEED:3");
     }
 }
