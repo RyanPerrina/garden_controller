@@ -20,9 +20,15 @@ const char* ssid = "Mi10";
 const char* password = "12345678";
 */
 
-/* WiFi HDavi casa */
+/* WiFi Manu casa */
+/*
 const char* ssid = "FASTWEB-E25F13";
 const char* password = "$Andr0med06.";
+*/
+
+/* WiFi HDavi casa */
+const char* ssid = "TIM-90212215";
+const char* password = "4s07Twc1U7Iu7CfTJ4a7wXGq";
 
 /* WiFi HDavi telefono */
 /*
@@ -132,24 +138,19 @@ void loop() {
     int temperature = temp -> getTemperature();
 
     /* check luminosity and temperature */
-//    if (luminosity < 5){
-//      //snprintf (msg, MSG_BUFFER_SIZE, "ACTIVATE_LIGHT_SYSTEM");
-//      msg = msg + " ACTIVATE_LIGHT_SYSTEM ";
-//    }
-//    if (luminosity < 2){
-//      //snprintf (msg, MSG_BUFFER_SIZE, "IRRIGATE");
-//      msg = msg + " IRRIGATE ";
-//
-//    }
-//    if (temperature == 5 ){
-//      //snprintf (msg, MSG_BUFFER_SIZE, "ALARM");
-//      msg = msg + " ALARM ";
-//      led -> switchOff();
-//    }
-//    
+    if (luminosity < 5){
+      msg = msg + "ACTIVATE_LIGHT_SYSTEM - ";
+    }
+    if (luminosity < 2){
+      msg = msg + "IRRIGATE - ";
+    }
+    if (temperature == 5 ){
+      msg = msg + "ALARM - ";
+      led -> switchOff();
+    }
+    
     /* creating a msg in the buffer */
-    //snprintf (msg, MSG_BUFFER_SIZE, "L: %d - T: %d", luminosity, temperature);
-    msg =  "L: " + String(luminosity) + " T: " + String(temperature) + "\n";
+    msg =  msg + "L: " + String(luminosity) + " T: " + String(temperature) + "\n";
     Serial.println(String("Sent: ") + msg);
     
     /* publishing the msg */
