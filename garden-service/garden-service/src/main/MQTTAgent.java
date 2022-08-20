@@ -27,7 +27,7 @@ public class MQTTAgent extends AbstractVerticle {
     static private boolean alarmOn = false;
     static private MqttClient client;
     public MQTTAgent() throws Exception {
-        channel = new SerialCommChannel("COM3",9600);
+        channel = new SerialCommChannel("COM5", 9600);
     }
 
     @Override
