@@ -70,9 +70,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
   String msg = String((char*) payload);
   msg = msg.substring(0, length);
   Serial.println(String("Received: ") + msg);
-
-  if (msg == "STOP_ALARM"){
+  
+  if (msg == "ALARMOFF"){
     led -> switchOn();
+  } else if(msg == "ALARMON"){
+    led -> switchOff();
   }
 }
 
@@ -120,7 +122,7 @@ void loop() {
     reconnect();
   }
   client.loop();
-
+  
   unsigned long now = millis();
   if (now - lastMsgTime > MSG_TIME) {
     lastMsgTime = now;

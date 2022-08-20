@@ -4,7 +4,18 @@
 #include "Events.h"
 #include "MsgServiceBTES.h"
 #include <string.h>
+#include "TimerOne.h"
 
+#define ALARMTIMERPERIOD 5
+volatile int alarmCount = 0;
+boolean timerFlag = false;
+void alarmTimer(){
+  alarmCount += 1;
+  if( alarmCount >= ALARMTIMERPERIOD){
+    timerFlag = true;
+    alarmCount = 0;
+  }
+}
 
 GardenControllerFSM ::GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, AnalogLed *l4, ServoMotorImpl *servo)
 {
@@ -14,6 +25,11 @@ GardenControllerFSM ::GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, Analo
   this->l4 = l4;
   this->irrigationSystem = new IrrigationSystem(servo);
   this->state = State::AUTO;
+
+  // this->state = State::ALARM;
+  // //togliere:
+  //         Timer1.initialize();
+  //       Timer1.attachInterrupt(alarmTimer);
 }
 
 void GardenControllerFSM::checkEvents()
@@ -24,12 +40,17 @@ void GardenControllerFSM::checkEvents()
 void GardenControllerFSM::execRuotine(){
   switch (this->state){
     case State::AUTO:
+   
       this->irrigationSystem->update();
       break;
     case State::MANUAL:
       this->irrigationSystem->update();
       break;
     case State::ALARM:
+      if(timerFlag){
+        timerFlag = false;
+        MsgServiceEs.sendMsg(Msg("ALARMON"));
+      }
       break;
   }
 }
@@ -40,7 +61,6 @@ void GardenControllerFSM ::handleEvent(Event *e)
   switch (this->state)
   {
   case State::AUTO:
-    
     switch (e->getType())
     {
     case MANUALMODEREQUESTEVENT:
@@ -52,6 +72,11 @@ void GardenControllerFSM ::handleEvent(Event *e)
     case CONTROLEVENTAUTO:
       ControlEventAuto* eventAuto = (ControlEventAuto*) e;
       String msg = eventAuto->getMsg();
+
+      this->l1->switchOn();
+      delay(100);
+      this->l1->switchOff();
+      Serial.println(msg);
       if(msg.indexOf("LED1ON LED2ON") != -1){
         this->l1->switchOn();
         this->l2->switchOn();
@@ -64,6 +89,9 @@ void GardenControllerFSM ::handleEvent(Event *e)
         int intensity = msg.substring(index+String("LED34:").length(),index+String("LED34:").length()+1).toInt();
         this->l3->setIntensity(intensity);
         this->l4->setIntensity(intensity);
+      } else {
+        this->l3->setIntensity(0);
+        this->l4->setIntensity(0);
       }
 
       //testare da qui
@@ -87,6 +115,8 @@ void GardenControllerFSM ::handleEvent(Event *e)
       if(index != -1  && this->irrigationSystem->isInPause() ){
         this->state = State::ALARM;
         this->irrigationSystem->off();
+        Timer1.initialize();
+        Timer1.attachInterrupt(alarmTimer);
       }
       break;
     }
@@ -151,6 +181,8 @@ void GardenControllerFSM ::handleEvent(Event *e)
           case DISABLEALARMEVENT:
           this->state = State::AUTO;
           MsgServiceBt.sendMsg(Msg("ALARM DISABLED"));
+          MsgServiceEs.sendMsg(Msg("ALARMOFF"));
+          Timer1.stop();
           break;
     }
     break;
