@@ -136,18 +136,6 @@ void loop() {
     /* getting values from sensors */
     int luminosity = photo -> getLuminosity();
     int temperature = temp -> getTemperature();
-
-    /* check luminosity and temperature */
-    if (luminosity < 5){
-      msg = msg + "ACTIVATE_LIGHT_SYSTEM - ";
-    }
-    if (luminosity < 2){
-      msg = msg + "IRRIGATE - ";
-    }
-    if (temperature == 5 ){
-      msg = msg + "ALARM - ";
-      led -> switchOff();
-    }
     
     /* creating a msg in the buffer */
     msg =  msg + "L: " + String(luminosity) + " T: " + String(temperature) + "\n";
