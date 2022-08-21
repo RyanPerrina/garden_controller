@@ -29,31 +29,30 @@ public class MQTTAgent extends AbstractVerticle {
     public MQTTAgent() throws Exception {
         channel = new SerialCommChannel("COM5", 9600);
     }
+    
+    private int luminosity;
+    private int temperature;
 
     @Override
     public void start() {
         MQTTAgent.client = MqttClient.create(vertx);
 
         MQTTAgent.client.connect(1883, "broker.mqtt-dashboard.com", c -> {
-
             log("connected");
-
             log("subscribing...");
+            
             MQTTAgent.client.publishHandler(s -> {
-//                        System.out.println("There are new message in topic: " + s.topicName());
-//                        System.out.println("Content(as string) of the message: " + s.payload().toString());
-//                        System.out.println("QoS: " + s.qosLevel());
-
+                        
                         String msg = s.payload().toString();
                         if(msg.contains("ALARM")){
-                            //System.out.println("ricevuto alarm infatti");
+                            alarmOn = true;
                             return;
                         }
-                        Integer luminosity = Integer.parseInt(msg.substring("L: ".length(),msg.indexOf(" T:") ));
-                        Integer temperature = Integer.parseInt(msg.substring(msg.indexOf("T: ")+"T: ".length(),msg.indexOf("\n")));
-                        System.out.println("ok: "+luminosity + " " + temperature);
-                        if(!MQTTAgent.alarmOn){
-                            handleData(luminosity,temperature);
+                        this.luminosity = Integer.parseInt(msg.substring("L: ".length(), msg.indexOf(" T:") ));
+                        this.temperature = Integer.parseInt(msg.substring(msg.indexOf("T: ") + "T: ".length(), msg.indexOf("\n")));
+                        System.out.println("Received: " + this.luminosity + " " + this.temperature);
+                        if(!alarmOn){
+                            handleData(luminosity, temperature);
                         }
 
                     })
@@ -79,13 +78,13 @@ public class MQTTAgent extends AbstractVerticle {
                             if( msg != null){
                                 handleMsg(msg);
                             }
-                            if(MQTTAgent.alarmOn){
+                            if(alarmOn){
                                 MQTTAgent.client.publish("smart-garden",
                                         Buffer.buffer("ALARMON"),
                                         MqttQoS.AT_LEAST_ONCE,
                                         false,
                                         false);
-                                System.out.println("inviato alarm via mqtt");
+                                System.out.println("Sent alarm via MQTT");
                             }
                         }
                     }
@@ -100,43 +99,59 @@ public class MQTTAgent extends AbstractVerticle {
      */
     private void handleMsg(String msg){
         if(msg.contains("ALARMON")){
-            MQTTAgent.alarmOn = true;
+            alarmOn = true;
         } else if(msg.contains("ALARMOFF")){
-            System.out.println("disattivato alarm");
-            MQTTAgent.alarmOn = false;
+            System.out.println("Alarm deactivated");
+            alarmOn = false;
             MQTTAgent.client.publish("smart-garden",
                     Buffer.buffer("ALARMOFF"),
                     MqttQoS.AT_LEAST_ONCE,
                     false,
                     false);
-
         }
     }
 
     private void log(String msg) {
-        System.out.println("[DATA SERVICE] "+msg);
+        System.out.println("[DATA SERVICE] " + msg);
     }
 
-    private void handleData(int luminosity,int temperature) {
+    private void handleData(int luminosity, int temperature) {
         String msg = "";
         if (luminosity < 5){
             msg += "LED1ON LED2ON";
-            int led34intensity = (int) ((((double) luminosity)/8)*4);
-            msg += " LED34:"+String.valueOf(led34intensity);
+            int led34intensity = (int) ((((double) luminosity) / 8) * 4);
+            msg += " LED34:" + String.valueOf(led34intensity);
 
         }
-        if(luminosity<2){
+        if(luminosity < 2){
             msg += " IRRIGATIONON";
         } else {
             msg+= " IRRIGATIONOFF";
         }
         msg += " SPEED:" + String.valueOf(temperature);
 
-        if(temperature==5){
+        if(temperature == 5){
             msg += " TEMPERATURECHECK";
         }
         System.out.println(msg);
         channel.sendMsg(msg);
         //channel.sendMsg("LED1ON LED2ON LED34:1 IRRIGATIONON SPEED:1");
+    }
+    
+    public void send(String msg) {
+        MqttClient client = MqttClient.create(vertx);
+        client.publish("smart-garden",
+                       Buffer.buffer(msg),
+                       MqttQoS.AT_LEAST_ONCE,
+                       false,
+                       false);
+    }
+    
+    public int getLuminosity() {
+        return this.luminosity;
+    }
+    
+    public int getTemperature() {
+        return this.temperature;
     }
 }
