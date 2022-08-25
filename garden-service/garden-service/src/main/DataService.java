@@ -50,6 +50,7 @@ public class DataService extends AbstractVerticle {
 		if (res == null) {
 			sendError(400, response);
 		} else {
+		        String state = res.getString("state");
 		        boolean l1 = res.getBoolean("l1");
 		        boolean l2 = res.getBoolean("l2");
 		        int l3 = res.getInteger("l3");
@@ -57,7 +58,7 @@ public class DataService extends AbstractVerticle {
 		        float temp = res.getFloat("temp");
 		        int light = res.getInteger("light");
 			
-			values.addFirst(new DataPoint(l1, l2, l3, l4, temp, light));
+			values.addFirst(new DataPoint(state, l1, l2, l3, l4, temp, light));
 			if (values.size() > MAX_SIZE) {
 				values.removeLast();
 			}
@@ -71,6 +72,7 @@ public class DataService extends AbstractVerticle {
 		JsonArray arr = new JsonArray();
 		for (DataPoint p: values) {
 			JsonObject data = new JsonObject();
+			data.put("state", p.getState());
 			data.put("l1", p.getL1());
 			data.put("l2", p.getL2());
 			data.put("l3", p.getL3());
@@ -80,6 +82,7 @@ public class DataService extends AbstractVerticle {
 			arr.add(data);
 		}
 		routingContext.response()
+		        .putHeader("Access-Control-Allow-Origin", "*")
 			.putHeader("content-type", "application/json")
 			.end(arr.encodePrettily());
 	}
@@ -92,12 +95,11 @@ public class DataService extends AbstractVerticle {
 		System.out.println("[DATA SERVICE] "+msg);
 	}
 	
-	public void sendData(final boolean l1, final boolean l2, final int l3, final int l4, final float temp, final int light) {
-	    values.addFirst(new DataPoint(l1, l2, l3, l4, temp, light));
+	public void sendData(final String state, final boolean l1, final boolean l2, final int l3, final int l4, final float temp, final int light) {
+	    values.addFirst(new DataPoint(state, l1, l2, l3, l4, temp, light));
             if (values.size() > MAX_SIZE) {
                     values.removeLast();
             }
             log("Added new values");
 	}
-
 }
