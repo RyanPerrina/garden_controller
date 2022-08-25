@@ -2,7 +2,7 @@
 #define __MSGSERVICEBT__
 
 #include "Arduino.h"
-#include "AltSoftSerial.h"
+//#include "AltSoftSerial.h"
 #include <SoftwareSerial.h>
 #include "MsgService.h"
 class MsgServiceBT {

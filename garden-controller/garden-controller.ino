@@ -23,6 +23,10 @@ void setup() {
   AnalogLed * l3 = new AnalogLed(PIN_LED3);
   AnalogLed *l4 = new AnalogLed(PIN_LED4);
   ServoMotorImpl *servo = new ServoMotorImpl(PIN_SERVO);
+  servo -> on();
+  servo -> setPosition(0);
+  delay(1000);
+  servo -> off();
   fsm = new GardenControllerFSM(l1, l2, l3, l4, servo);
   MsgServiceEs.init(fsm);
   MsgServiceBt.init(fsm);
@@ -38,5 +42,3 @@ void loop() {
   // MsgServiceBt.sendMsg(Msg("MANUAL MODE ON"));
 
   }
-
-
