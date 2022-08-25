@@ -6,10 +6,11 @@ import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 
 public class GardenService extends AbstractVerticle {
-    
     enum Mode { AUTO, MANUAL, ALARM }
+    enum State { IDLE, IRRIGATING }
     
     static Mode mode = Mode.AUTO;
+    static State state = State.IDLE;
     static boolean l1 = false;
     static boolean l2 = false;
     static int l3 = 0;
@@ -23,20 +24,22 @@ public class GardenService extends AbstractVerticle {
         
         // HTTP agent for Dashboard (Web page)
         Vertx http = Vertx.vertx();
-        DataService service = new DataService(8080);
+        DataService service = new DataService(8001);
         http.deployVerticle(service);
         
         // Serial channel for Controller (Arduino)
-        CommChannel channel = new SerialCommChannel("COM5", 9600);
+        CommChannel channel = new SerialCommChannel("COM3", 9600);
         
         while(true) {
+            Thread.sleep(10000);
             int temp = agent.getTemperature();
             int light = agent.getLuminosity();
             
-            if (temp == 5 && mode != Mode.ALARM) {
+            if (temp == 5 && mode != Mode.ALARM && state != State.IRRIGATING) {
                 mode = Mode.ALARM;
                 agent.send("ALARMON");          // send ALARM message to sensorboard
                 channel.sendMsg("ALARMON");     // send ALARM message to controller
+                state = State.IDLE;
             }
             
             String msg = "";
@@ -53,8 +56,10 @@ public class GardenService extends AbstractVerticle {
                     
                     if(light < 2){
                         msg += " IRRIGATIONON";
+                        state = State.IRRIGATING;
                     } else {
                         msg += " IRRIGATIONOFF";
+                        state = State.IDLE;
                     }
                     msg += " SPEED:" + String.valueOf(temp);
 
@@ -64,15 +69,30 @@ public class GardenService extends AbstractVerticle {
                     System.out.println("Sent: " + msg);
                     channel.sendMsg(msg);
                     
-                    service.sendData(l1, l2, l3, l4, temp, light);
+                    service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
                     break;
                     
                 // receive data from sensorboard and controller and send them to dashboard
                 case MANUAL:
                     if (channel.isMsgAvailable()) {
                         msg = channel.receiveMsg();
-                        // handle message (l1, l2, l3, l4, irrigation)
-                        service.sendData(l1, l2, l3, l4, temp, light);
+                        // check message
+                        if (msg.contains("State")) {
+                            //state = ...
+                        } else if (msg.contains("L1")) {
+                            //l1 = ...
+                        } else if(msg.contains("L2")) {
+                            //l2 = ...
+                        } else if (msg.contains("L3")) {
+                            //l3 = ...
+                        } else if (msg.contains("L4")) {
+                            //l4 = ...
+                        } else if (msg.contains("Temp")) {
+                            //temp = ...
+                        } else if (msg.contains("Light")) {
+                            //light = ...
+                        }
+                        service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
                     }
                     break;
                     
