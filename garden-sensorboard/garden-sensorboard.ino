@@ -25,7 +25,6 @@ const char* password = "12345678";
 const char* ssid = "FASTWEB-E25F13";
 const char* password = "$Andr0med06.";
 */
-
 /* WiFi HDavi casa */
 const char* ssid = "TIM-90212215";
 const char* password = "4s07Twc1U7Iu7CfTJ4a7wXGq";
