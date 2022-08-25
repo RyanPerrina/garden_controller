@@ -23,11 +23,9 @@ import java.util.Map;
  */
 
 public class MQTTAgent extends AbstractVerticle {
-    private CommChannel channel;
     static private boolean alarmOn = false;
     static private MqttClient client;
     public MQTTAgent() throws Exception {
-        channel = new SerialCommChannel("COM5", 9600);
     }
     
     private int luminosity;
@@ -57,58 +55,7 @@ public class MQTTAgent extends AbstractVerticle {
 
                     })
                     .subscribe("smart-garden", 2);
-
-//			log("publishing a msg");
-//			client.publish("esiot-2122",
-//				  Buffer.buffer("hello"),
-//				  MqttQoS.AT_LEAST_ONCE,
-//				  false,
-//				  false);
-            new Thread(){
-                @Override
-                public void run() {
-                    while(true){
-                        if(channel.isMsgAvailable()){
-                            String msg = null;
-                            try {
-                                msg = channel.receiveMsg();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            if( msg != null){
-                                handleMsg(msg);
-                            }
-                            if(alarmOn){
-                                MQTTAgent.client.publish("smart-garden",
-                                        Buffer.buffer("ALARMON"),
-                                        MqttQoS.AT_LEAST_ONCE,
-                                        false,
-                                        false);
-                                System.out.println("Sent alarm via MQTT");
-                            }
-                        }
-                    }
-                }
-            }.start();
         });
-    }
-
-    /**
-     * handle serial msg.
-     * @param msg
-     */
-    private void handleMsg(String msg){
-        if(msg.contains("ALARMON")){
-            alarmOn = true;
-        } else if(msg.contains("ALARMOFF")){
-            System.out.println("Alarm deactivated");
-            alarmOn = false;
-            MQTTAgent.client.publish("smart-garden",
-                    Buffer.buffer("ALARMOFF"),
-                    MqttQoS.AT_LEAST_ONCE,
-                    false,
-                    false);
-        }
     }
 
     private void log(String msg) {
@@ -134,8 +81,6 @@ public class MQTTAgent extends AbstractVerticle {
             msg += " TEMPERATURECHECK";
         }
         System.out.println(msg);
-        channel.sendMsg(msg);
-        //channel.sendMsg("LED1ON LED2ON LED34:1 IRRIGATIONON SPEED:1");
     }
     
     public void send(String msg) {
