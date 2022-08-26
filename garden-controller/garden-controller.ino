@@ -25,7 +25,7 @@ void setup() {
   ServoMotorImpl *servo = new ServoMotorImpl(PIN_SERVO);
   servo -> on();
   servo -> setPosition(0);
-  delay(1000);
+  delay(2000);
   servo -> off();
   fsm = new GardenControllerFSM(l1, l2, l3, l4, servo);
   MsgServiceEs.init(fsm);

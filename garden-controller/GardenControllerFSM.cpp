@@ -68,6 +68,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
       break;
     case ACKMANUAMODEOKEVENT:
       this->state = State::MANUAL;
+      MsgService.sendMsg(Msg("MANUALMODEON"));
       break;
     case CONTROLEVENTAUTO:
       ControlEventAuto* eventAuto = (ControlEventAuto*) e;
@@ -127,6 +128,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
         case DISABLEMANUALMODEEVENT:
           this->state = State::AUTO;
           MsgServiceBt.sendMsg(Msg("AUTOMODEENABLED"));
+          MsgService.sendMsg(Msg("MANUALMODEOFF"));
           break;
         case LED1ONOFFEVENT : 
           if(this->l1->isLedOn()){
@@ -134,6 +136,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
           } else {
             this->l1->switchOn();
           }
+          MsgService.sendMsg(Msg("L1"));
           break;
         case LED2ONOFFEVENT : 
           if(this->l2->isLedOn()){
@@ -141,6 +144,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
           } else {
             this->l2->switchOn();
           }
+          MsgService.sendMsg(Msg("L2"));
         break;
       case IRRIGATIONONOFFEVENT : 
           this->irrigationSystem->onOff();
@@ -157,18 +161,22 @@ void GardenControllerFSM ::handleEvent(Event *e)
       case LED3INTENSITYUPEVENT:
           this->l3->increaseIntensity();
           MsgServiceBt.sendMsg(Msg("LED3 INTENSITY: " + String(this->l3->getIntensity())));
+          MsgService.sendMsg(Msg("L3 UP"));
           break;
       case LED3INTENSITYDOWNEVENT:
           this->l3->decreaseIntensity();
           MsgServiceBt.sendMsg(Msg("LED3 INTENSITY: " + String(this->l3->getIntensity())));
+          MsgService.sendMsg(Msg("L3 DOWN"));
           break;
       case LED4INTENSITYUPEVENT:
           this->l4->increaseIntensity();
           MsgServiceBt.sendMsg(Msg("LED4 INTENSITY: " + String(this->l4->getIntensity())));
+          MsgService.sendMsg(Msg("L4 UP"));
           break;
       case LED4INTENSITYDOWNEVENT:
           this->l4->decreaseIntensity();
           MsgServiceBt.sendMsg(Msg("LED4 INTENSITY: " + String(this->l4->getIntensity())));
+          MsgService.sendMsg(Msg("L4 DOWN"));
           break;
     }
     break;
