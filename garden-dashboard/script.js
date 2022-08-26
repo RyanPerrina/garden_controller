@@ -13,7 +13,7 @@ $(document).ready(function () {
         $("#light").text(data[0].light);
       },
       error: function (data) {
-        console.log(data);
+        console.log("Comunication error!");
       }
     });
 
