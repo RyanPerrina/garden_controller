@@ -30,8 +30,9 @@ public class GardenService extends AbstractVerticle {
         // Serial channel for Controller (Arduino)
         CommChannel channel = new SerialCommChannel("COM3", 9600);
         
+        Thread.sleep(5000);
+        
         while(true) {
-            Thread.sleep(10000);
             int temp = agent.getTemperature();
             int light = agent.getLuminosity();
             
@@ -39,13 +40,21 @@ public class GardenService extends AbstractVerticle {
                 mode = Mode.ALARM;
                 agent.send("ALARMON");          // send ALARM message to sensorboard
                 channel.sendMsg("ALARMON");     // send ALARM message to controller
-                state = State.IDLE;
             }
             
             String msg = "";
             switch(mode) {
                 // receive data from sensorboard and send them to dashboard and controller
                 case AUTO:
+                    if (channel.isMsgAvailable()) {
+                        msg = channel.receiveMsg();
+                        if (msg.contains("MANUALMODEON")){
+                            mode = Mode.MANUAL;
+                            System.out.println("Switch to manual mode.");
+                            break;
+                        }
+                    }
+                    
                     if (light < 5){
                         msg += "LED1ON LED2ON";
                         int led34intensity = (int) ((((double) light) / 8) * 4);
@@ -60,6 +69,8 @@ public class GardenService extends AbstractVerticle {
                     } else {
                         msg += " IRRIGATIONOFF";
                         state = State.IDLE;
+                        l1 = l2 = false;
+                        l3 = l4 = 0;
                     }
                     msg += " SPEED:" + String.valueOf(temp);
 
@@ -70,27 +81,36 @@ public class GardenService extends AbstractVerticle {
                     channel.sendMsg(msg);
                     
                     service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
+                    Thread.sleep(3000);
                     break;
                     
                 // receive data from sensorboard and controller and send them to dashboard
                 case MANUAL:
                     if (channel.isMsgAvailable()) {
                         msg = channel.receiveMsg();
+                        System.out.println("Received:" + msg);
                         // check message
-                        if (msg.contains("State")) {
-                            //state = ...
+                        if (msg.contains("MANUALMODEOFF")) {
+                            mode = Mode.AUTO;
+                            l1 = l2 = false;
+                            l3 = l4 = 0;
+                            System.out.println("Switch to auto mode.");
+                            break;
+                        }
+                        if (msg.contains("IRRIGATION: ON/OFF")) {
+                            state = (state == State.IDLE) ? State.IRRIGATING : State.IDLE;
                         } else if (msg.contains("L1")) {
-                            //l1 = ...
-                        } else if(msg.contains("L2")) {
-                            //l2 = ...
-                        } else if (msg.contains("L3")) {
-                            //l3 = ...
-                        } else if (msg.contains("L4")) {
-                            //l4 = ...
-                        } else if (msg.contains("Temp")) {
-                            //temp = ...
-                        } else if (msg.contains("Light")) {
-                            //light = ...
+                            l1 = !l1;
+                        } else if (msg.contains("L2")) {
+                            l2 = !l2;
+                        } else if (msg.contains("L3 UP")) {
+                            l3++;
+                        } else if (msg.contains("L3 DOWN")) {
+                            l3--;
+                        } else if (msg.contains("L4 UP")) {
+                            l4++;
+                        } else if (msg.contains("L4 DOWN")) {
+                            l4--;
                         }
                         service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
                     }
