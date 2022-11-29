@@ -64,7 +64,7 @@ public:
   EventQueue();
   bool isEmpty();
   void enqueue(Event* ev);
-  Event* dequeue();  
+  Event* dequeue(); 
 private:
   Event* queue[MAX_EVQUEUE_SIZE];
   int head, tail; 
@@ -83,10 +83,12 @@ public:
   virtual void handleEvent(Event* ev) = 0;
   void notifyEvent(Event* ev);  
   void checkEvents();  
+  EventQueue eventQueue; 
+
 
 protected:
   AsyncFSM();    
-  EventQueue eventQueue;
+  //EventQueue eventQueue;
 };
 
 #endif

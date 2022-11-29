@@ -4,8 +4,10 @@
 #define EI_NOTPORTB
 #define EI_NOTPORTD
 #include "EnableInterrupt.h"
+#include "MemoryFree.h"
+#include "Events.h"
 
-#define MAX_EVQUEUE_SIZE 20 
+#define MAX_EVQUEUE_SIZE 5 
 
 /* ------------------------ InterruptDispatcher ----------- */
 
@@ -102,10 +104,12 @@ void EventQueue::enqueue(Event* ev){
 }
 
 Event* EventQueue::dequeue(){
+
     if (isEmpty()){
       return 0;
     } else {
       Event* pev = queue[head];
+      queue[head] = NULL;
       head = (head+1) % MAX_EVQUEUE_SIZE;
       return pev; 
     }
@@ -125,6 +129,8 @@ void AsyncFSM::checkEvents(){
     noInterrupts();
     bool isEmpty = eventQueue.isEmpty();
     interrupts();
+    Serial.println(isEmpty);
+   
 
     if (!isEmpty){
       noInterrupts();
@@ -133,7 +139,17 @@ void AsyncFSM::checkEvents(){
 
       if (ev != NULL){
         handleEvent(ev);
-        delete ev;
-      }
+        //Serial.print("pre del");
+        //Serial.println(freeMemory());
+        //delete ev;
+        //Serial.print("lol: ");
+        //Serial.println(((ControlEventAuto*) ev)->getMsg());
+        //Serial.print("post del");
+        //Serial.println(freeMemory());
+        //Serial.println("----------");
+      //} else {
+        //Serial.println("ok");
+      } 
+
     }    
 }

@@ -7,7 +7,7 @@ MsgServiceBT::MsgServiceBT(int rxPin, int txPin){
 }
 
 void MsgServiceBT::init(){
-  content.reserve(256);
+  content.reserve(1024);
   channel->begin(9600);
   availableMsg = NULL;
 }

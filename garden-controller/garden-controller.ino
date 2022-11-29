@@ -3,9 +3,10 @@
 #include "AnalogLed.h"
 #include "ServoMotorImpl.h"
 #include "GardenControllerFSM.h"
-
+#include "MemoryFree.h"
 #include "MSGServiceES.h"
 #include "MsgServiceBTES.h"
+#include "Events.h"
 
 #define PIN_LED1 13
 #define PIN_LED2 12
@@ -34,10 +35,23 @@ void setup() {
 
 void loop() {
   
-  MsgServiceEs.checkMSG();
-  MsgServiceBt.checkMSG();
+  //MsgServiceEs.checkMSG();
+  //MsgServiceBt.checkMSG();
+  
+        Serial.print("pre creat");
+        Serial.println(freeMemory());
+  ControlEventAuto ev(NULL,"LED1ON LED2ON AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+  Event* event = &ev;
+  //Serial.println(((ControlEventAuto*)event)->getMsg());
+        Serial.print("post creat");
+        Serial.println(freeMemory());
+  fsm->eventQueue.enqueue(event);
   fsm->checkEvents();
-  fsm->execRuotine();
+  Serial.println("mhh");
+  Serial.print("free mem:");
+  Serial.println(freeMemory());
+  delay(1000);
+  //fsm->execRuotine();
   //TODO:metodo tipo fsm->executestuff() e lui fa cose che deve fare periodicamente come aggiornare sistema di irrigazione fino a che evento sopracciunge? o meglio task
   // MsgServiceBt.sendMsg(Msg("MANUAL MODE ON"));
 
