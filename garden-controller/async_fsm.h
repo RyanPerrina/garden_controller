@@ -1,7 +1,7 @@
 #ifndef __ASYNC_FSM__
 #define __ASYNC_FSM__
 
-#define MAX_EVQUEUE_SIZE 20 
+#define MAX_EVQUEUE_SIZE 5 
 #define NUM_PINS 13
 
 /**

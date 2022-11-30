@@ -48,37 +48,45 @@ public class GardenService extends AbstractVerticle {
                 case AUTO:
                     if (channel.isMsgAvailable()) {
                         msg = channel.receiveMsg();
+                        System.out.println("arduino received"+msg);
                         if (msg.contains("MANUALMODEON")){
                             mode = Mode.MANUAL;
                             System.out.println("Switch to manual mode.");
                             break;
                         }
+                        msg = "";
+                        break;
                     }
-                    
+                    System.out.println("1:"+msg);
                     if (light < 5){
                         msg += "LED1ON LED2ON";
                         int led34intensity = (int) ((((double) light) / 8) * 4);
                         msg += " LED34:" + String.valueOf(led34intensity);
                         l1 = l2 = true;
                         l3 = l4 = led34intensity;
+                    } else {
+                        l1 = l2 = false;
+                        l3 = l4 = 0;
                     }
-                    
+                    System.out.println("2:"+msg);
                     if(light < 2){
                         msg += " IRRIGATIONON";
                         state = State.IRRIGATING;
                     } else {
                         msg += " IRRIGATIONOFF";
                         state = State.IDLE;
-                        l1 = l2 = false;
-                        l3 = l4 = 0;
+
                     }
+                    System.out.println("3:"+msg);
                     msg += " SPEED:" + String.valueOf(temp);
 
                     if(temp == 5){
                         msg += " TEMPERATURECHECK";
                     }
-                    System.out.println("Sent: " + msg);
+                    System.out.println("Sent:" + msg);
                     channel.sendMsg(msg);
+                    //channel.sendMsg("IRRIGATION");
+                    msg = "";
                     
                     service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
                     Thread.sleep(3000);

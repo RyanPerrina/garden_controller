@@ -22,7 +22,7 @@ class ControlEventAuto : public Event {
 
     public:
         ControlEventAuto(MsgServiceClassES* source,String msg);
-
+        ControlEventAuto();
         MsgServiceClassES* getSource();
         String getMsg();
     

@@ -6,6 +6,9 @@
 
 // String content;
 MsgServiceClassES MsgServiceEs;
+ControlEventAuto events[MAX_EVQUEUE_SIZE];
+ControlEventAuto event;
+int head = 0;
 
 void MsgServiceClassES::init(Observer* observer){
     MsgServiceClass::init();
@@ -16,7 +19,10 @@ void MsgServiceClassES::checkMSG(){
         Msg* m = MsgServiceClass::receiveMsg();
         String msg = m->getContent();
         delete m;
-        generateEvent((Event*) new ControlEventAuto(this,msg));
+        event = ControlEventAuto(this,msg);
+        events[head] = event;
+        head = (head+1) %MAX_EVQUEUE_SIZE;
+        generateEvent(&event);
     } 
 
 }

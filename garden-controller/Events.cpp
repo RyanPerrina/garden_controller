@@ -5,6 +5,9 @@ ControlEventAuto::ControlEventAuto(MsgServiceClassES *source,String msg) : Event
     this->source = source;
     this->msg = msg;
 }
+ControlEventAuto::ControlEventAuto():Event(CONTROLEVENTAUTO){
+    
+}
 
 String ControlEventAuto::getMsg(){
     return this->msg;

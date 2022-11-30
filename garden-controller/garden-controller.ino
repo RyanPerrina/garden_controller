@@ -35,7 +35,7 @@ void setup() {
 void loop() {
   
   MsgServiceEs.checkMSG();
-  MsgServiceBt.checkMSG();
+  //MsgServiceBt.checkMSG();
   fsm->checkEvents();
   fsm->execRuotine();
   //TODO:metodo tipo fsm->executestuff() e lui fa cose che deve fare periodicamente come aggiornare sistema di irrigazione fino a che evento sopracciunge? o meglio task
