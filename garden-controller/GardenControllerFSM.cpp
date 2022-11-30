@@ -73,12 +73,7 @@ void GardenControllerFSM ::handleEvent(Event *e)
     case CONTROLEVENTAUTO:
       ControlEventAuto* eventAuto = (ControlEventAuto*) e;
       String msg = eventAuto->getMsg();
-      //here:Serial.println(msg);
-
-
-      // this->l1->switchOn();
-      // delay(100);
-      // this->l1->switchOff();
+      
       if(msg.indexOf("LED1ON LED2ON") != -1){
         this->l1->switchOn();
         this->l2->switchOn();

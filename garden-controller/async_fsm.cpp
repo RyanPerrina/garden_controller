@@ -5,7 +5,6 @@
 #define EI_NOTPORTD
 #include "EnableInterrupt.h"
 #include "Events.h"
-#include "MemoryFree.h"
 
 
 /* ------------------------ InterruptDispatcher ----------- */
@@ -107,8 +106,6 @@ Event* EventQueue::dequeue(){
       return 0;
     } else {
       Event* pev = queue[head];
-      //Serial.println(((ControlEventAuto*)queue[head])->getMsg());
-      Serial.println(freeMemory());
       head = (head+1) % MAX_EVQUEUE_SIZE;
       return pev; 
     }

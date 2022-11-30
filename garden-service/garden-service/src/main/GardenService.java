@@ -28,7 +28,7 @@ public class GardenService extends AbstractVerticle {
         http.deployVerticle(service);
         
         // Serial channel for Controller (Arduino)
-        CommChannel channel = new SerialCommChannel("COM3", 9600);
+        CommChannel channel = new SerialCommChannel("COM4", 9600);
         
         Thread.sleep(5000);
         
@@ -57,7 +57,7 @@ public class GardenService extends AbstractVerticle {
                         msg = "";
                         break;
                     }
-                    System.out.println("1:"+msg);
+                    
                     if (light < 5){
                         msg += "LED1ON LED2ON";
                         int led34intensity = (int) ((((double) light) / 8) * 4);
@@ -68,7 +68,7 @@ public class GardenService extends AbstractVerticle {
                         l1 = l2 = false;
                         l3 = l4 = 0;
                     }
-                    System.out.println("2:"+msg);
+                    
                     if(light < 2){
                         msg += " IRRIGATIONON";
                         state = State.IRRIGATING;
@@ -77,7 +77,7 @@ public class GardenService extends AbstractVerticle {
                         state = State.IDLE;
 
                     }
-                    System.out.println("3:"+msg);
+                    
                     msg += " SPEED:" + String.valueOf(temp);
 
                     if(temp == 5){
@@ -85,7 +85,6 @@ public class GardenService extends AbstractVerticle {
                     }
                     System.out.println("Sent:" + msg);
                     channel.sendMsg(msg);
-                    //channel.sendMsg("IRRIGATION");
                     msg = "";
                     
                     service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
