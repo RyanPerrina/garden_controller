@@ -19,12 +19,14 @@ void MsgServiceClassES::checkMSG(){
         Msg* m = MsgServiceClass::receiveMsg();
         String msg = m->getContent();
         delete m;
-        event = ControlEventAuto(this,msg);
-        events[head] = event;
-        head = (head+1) %MAX_EVQUEUE_SIZE;
-        generateEvent(&event);
+        if(msg!="" && msg != " "){
+          event = ControlEventAuto(this,msg);
+          events[head] = event;
+          head = (head+1) %MAX_EVQUEUE_SIZE;
+          generateEvent(&event);
+        }
+       
     } 
-
 }
 
 void MsgServiceClassES::notifyInterrupt(int pin){

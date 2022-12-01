@@ -28,7 +28,7 @@ public class GardenService extends AbstractVerticle {
         http.deployVerticle(service);
         
         // Serial channel for Controller (Arduino)
-        CommChannel channel = new SerialCommChannel("COM4", 9600);
+        CommChannel channel = new SerialCommChannel("COM3", 9600);
         
         Thread.sleep(5000);
         
@@ -43,12 +43,15 @@ public class GardenService extends AbstractVerticle {
             }
             
             String msg = "";
+            System.out.print("temp e luce:");
+            System.out.print(temp );
+            System.out.println(light);
             switch(mode) {
                 // receive data from sensorboard and send them to dashboard and controller
                 case AUTO:
                     if (channel.isMsgAvailable()) {
                         msg = channel.receiveMsg();
-                        System.out.println("arduino received"+msg);
+                        System.out.println("arduino received:"+msg);
                         if (msg.contains("MANUALMODEON")){
                             mode = Mode.MANUAL;
                             System.out.println("Switch to manual mode.");
