@@ -7,7 +7,7 @@ import io.vertx.core.buffer.Buffer;
 
 public class GardenService extends AbstractVerticle {
     enum Mode { AUTO, MANUAL, ALARM }
-    enum State { IDLE, IRRIGATING }
+    enum State { IDLE, IRRIGATING, ALARM }
     
     static Mode mode = Mode.AUTO;
     static State state = State.IDLE;
@@ -28,7 +28,7 @@ public class GardenService extends AbstractVerticle {
         http.deployVerticle(service);
         
         // Serial channel for Controller (Arduino)
-        CommChannel channel = new SerialCommChannel("COM4", 9600);
+        CommChannel channel = new SerialCommChannel("COM3", 9600);
         
         Thread.sleep(5000);
         
@@ -40,15 +40,20 @@ public class GardenService extends AbstractVerticle {
                 mode = Mode.ALARM;
                 agent.send("ALARMON");          // send ALARM message to sensorboard
                 channel.sendMsg("ALARMON");     // send ALARM message to controller
+                state = State.ALARM;
+                service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
             }
             
             String msg = "";
+            System.out.print("temp e luce:");
+            System.out.print(temp );
+            System.out.println(light);
             switch(mode) {
                 // receive data from sensorboard and send them to dashboard and controller
                 case AUTO:
                     if (channel.isMsgAvailable()) {
                         msg = channel.receiveMsg();
-                        System.out.println("arduino received"+msg);
+                        System.out.println("arduino received:"+msg);
                         if (msg.contains("MANUALMODEON")){
                             mode = Mode.MANUAL;
                             System.out.println("Switch to manual mode.");
@@ -129,9 +134,12 @@ public class GardenService extends AbstractVerticle {
                         msg = channel.receiveMsg();
                         if (msg.contains("ALARMOFF")) {
                             mode = Mode.AUTO;
+                            state = State.IDLE;
                             agent.send("ALARMOFF");
                         }
                     }
+                    service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
+                    Thread.sleep(3000);
                     break;
             }
         }
