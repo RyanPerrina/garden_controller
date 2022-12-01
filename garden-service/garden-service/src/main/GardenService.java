@@ -7,7 +7,7 @@ import io.vertx.core.buffer.Buffer;
 
 public class GardenService extends AbstractVerticle {
     enum Mode { AUTO, MANUAL, ALARM }
-    enum State { IDLE, IRRIGATING }
+    enum State { IDLE, IRRIGATING, ALARM }
     
     static Mode mode = Mode.AUTO;
     static State state = State.IDLE;
@@ -40,6 +40,8 @@ public class GardenService extends AbstractVerticle {
                 mode = Mode.ALARM;
                 agent.send("ALARMON");          // send ALARM message to sensorboard
                 channel.sendMsg("ALARMON");     // send ALARM message to controller
+                state = State.ALARM;
+                service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
             }
             
             String msg = "";
@@ -132,9 +134,12 @@ public class GardenService extends AbstractVerticle {
                         msg = channel.receiveMsg();
                         if (msg.contains("ALARMOFF")) {
                             mode = Mode.AUTO;
+                            state = State.IDLE;
                             agent.send("ALARMOFF");
                         }
                     }
+                    service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
+                    Thread.sleep(3000);
                     break;
             }
         }
