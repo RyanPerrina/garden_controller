@@ -25,7 +25,6 @@ GardenControllerFSM ::GardenControllerFSM(Led *l1, Led *l2, AnalogLed *l3, Analo
   this->l4 = l4;
   this->irrigationSystem = new IrrigationSystem(servo);
   this->state = State::AUTO;
-
   // this->state = State::ALARM;
   // //togliere:
   //         Timer1.initialize();
@@ -69,6 +68,11 @@ void GardenControllerFSM ::handleEvent(Event *e)
     case ACKMANUAMODEOKEVENT:
       this->state = State::MANUAL;
       MsgService.sendMsg(Msg("MANUALMODEON"));
+      this->l1->switchOff();
+      this->l2->switchOff();
+      this->l3->switchOff();
+      this->l4->switchOff();
+      this->irrigationSystem->off();
       break;
     case CONTROLEVENTAUTO:
       ControlEventAuto* eventAuto = (ControlEventAuto*) e;

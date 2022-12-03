@@ -60,6 +60,9 @@ public class GardenService extends AbstractVerticle {
                         if (msg.contains("MANUALMODEON")){
                             mode = Mode.MANUAL;
                             System.out.println("Switch to manual mode.");
+                            l1 = l2 = false;
+                            l3 = l4 = 0;
+
                             break;
                         } else if (msg.contains("ALARMON")){
                             mode = Mode.ALARM;
@@ -133,8 +136,9 @@ public class GardenService extends AbstractVerticle {
                         } else if (msg.contains("L4 DOWN")) {
                             l4--;
                         }
-                        service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
                     }
+                    service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
+
                     break;
                     
                 // wait for ALARM OFF message from sensorboard
