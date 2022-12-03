@@ -36,13 +36,16 @@ public class GardenService extends AbstractVerticle {
             int temp = agent.getTemperature();
             int light = agent.getLuminosity();
             
-            if (temp == 5 && mode != Mode.ALARM && state != State.IRRIGATING) {
-                mode = Mode.ALARM;
-                agent.send("ALARMON");          // send ALARM message to sensorboard
-                channel.sendMsg("ALARMON");     // send ALARM message to controller
-                state = State.ALARM;
-                service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
-            }
+//            if (temp == 5 && mode != Mode.ALARM && state != State.IRRIGATING) {
+//                mode = Mode.ALARM;
+//                agent.send("ALARMON");          // send ALARM message to sensorboard
+//                channel.sendMsg("ALARMON");     // send ALARM message to controller
+//                state = State.ALARM;
+//                service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
+//            }
+
+
+
             
             String msg = "";
             System.out.print("temp e luce:");
@@ -58,6 +61,12 @@ public class GardenService extends AbstractVerticle {
                             mode = Mode.MANUAL;
                             System.out.println("Switch to manual mode.");
                             break;
+                        } else if (msg.contains("ALARMON")){
+                            mode = Mode.ALARM;
+                            agent.send("ALARMON");          // send ALARM message to sensorboard
+                            state = State.ALARM;
+                            service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
+                            break;
                         }
                         msg = "";
                         break;
@@ -65,7 +74,7 @@ public class GardenService extends AbstractVerticle {
                     
                     if (light < 5){
                         msg += "LED1ON LED2ON";
-                        int led34intensity = (int) ((((double) light) / 8) * 4);
+                        int led34intensity = 4-(int) ((((double) light-1) / 7) * 4);
                         msg += " LED34:" + String.valueOf(led34intensity);
                         l1 = l2 = true;
                         l3 = l4 = led34intensity;

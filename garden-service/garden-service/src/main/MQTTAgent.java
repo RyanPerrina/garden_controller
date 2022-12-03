@@ -84,7 +84,7 @@ public class MQTTAgent extends AbstractVerticle {
     }
     
     public void send(String msg) {
-        MqttClient client = MqttClient.create(vertx);
+
         client.publish("smart-garden",
                        Buffer.buffer(msg),
                        MqttQoS.AT_LEAST_ONCE,
