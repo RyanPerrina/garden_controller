@@ -44,7 +44,7 @@ Lo \textit{Smart Garden} è implementato come una macchina a stati finiti basata
 In questo capitolo verrà descritta la strategia usata per svillupare ciascuna parte.
 
 \section{Garden Controller}
-Il \textit{Garden Controller} è la parte dello \textit{Smart Garden} che si occupa di irrigazione e illuminazione. Il sistema ha tre modalità: manuale, automatico e allarme. Le modalità vengono gesite da un macchina a stati finiti asincrona, il cui stato viene modificato da alcuni eventi (es. richiesta del controllo manuale via app). 
+Il \textit{Garden Controller} è la parte dello \textit{Smart Garden} che si occupa di irrigazione e illuminazione. Il sistema ha tre modalità: manuale, automatico e allarme. Le modalità vengono gestite da un macchina a stati finiti asincrona, il cui stato viene modificato da alcuni eventi (es. richiesta del controllo manuale via app). 
 \\Il Controller riceve istruzioni dal \textit{Garden Service} (in modalità automatica) o dal {Garden App} (in modalità manuale). Si basa su una coda di eventi, i quali vengono creati al momento della ricezione di messsaggi dalle componenti connesse.
 
 \begin{center}
@@ -66,7 +66,7 @@ La \textit{Garden Dashboard} ha lo scopo di visualizzare su una pagina web i dat
 \end{center}
 
 \section{Garden App}
-La \textit{Garden App} gestisce il comportamento dello \textit{Smart Garden} quando si entra in modalità manuale; inoltre è l'unico in grado di disattivare lo stato di allarme mediante apposito tasto.
+La \textit{Garden App} gestisce il comportamento dello \textit{Smart Garden} quando si entra in modalità manuale; inoltre è l'unico in grado di disattivare lo stato di allarme mediante un apposito pulsante.
 \begin{center}
 	\includegraphics[scale = 0.2]{app}
 	\\figura 2.3: Garden App

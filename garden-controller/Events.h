@@ -44,9 +44,4 @@ class ControlEventManual : public Event {
         MsgServiceBTES* source;
 
 };
-
-
-// class AllarmEvent : public Event {
-
-// };
 #endif

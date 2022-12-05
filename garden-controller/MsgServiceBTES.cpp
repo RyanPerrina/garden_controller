@@ -90,7 +90,6 @@ void MsgServiceBTES::checkMSG(){
                 generateEvent(new Event(DISABLEALARMEVENT));
                 break;
         }
-        //EventSource::generateEvent(new ControlEventManual(this));
     }
 }
 

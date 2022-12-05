@@ -36,20 +36,9 @@ public class GardenService extends AbstractVerticle {
             int temp = agent.getTemperature();
             int light = agent.getLuminosity();
             
-//            if (temp == 5 && mode != Mode.ALARM && state != State.IRRIGATING) {
-//                mode = Mode.ALARM;
-//                agent.send("ALARMON");          // send ALARM message to sensorboard
-//                channel.sendMsg("ALARMON");     // send ALARM message to controller
-//                state = State.ALARM;
-//                service.sendData(state.toString(), l1, l2, l3, l4, temp, light);
-//            }
-
-
-
-            
             String msg = "";
-            System.out.print("temp e luce:");
-            System.out.print(temp );
+            System.out.print("temp & light: ");
+            System.out.print(temp);
             System.out.println(light);
             switch(mode) {
                 // receive data from sensorboard and send them to dashboard and controller

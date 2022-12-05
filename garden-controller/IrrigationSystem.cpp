@@ -27,13 +27,6 @@ IrrigationSystem::IrrigationSystem(ServoMotorImpl *servo)
 
 void IrrigationSystem::update()
 {
-  // if(!this->servo->isOn()){
-  //   return;
-  // }
-  // updatePosition();
-  // this->servo->setPosition(this->degree);
-  // delay(10*(MAXSPEED - this->speed+1));
-
   switch (this->state)
   {
   case State::OFF:

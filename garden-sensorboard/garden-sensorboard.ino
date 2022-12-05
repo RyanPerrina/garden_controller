@@ -14,26 +14,9 @@
 #define PIN_LED 26
 #define PIN_PHOTO 32
 
-/* WiFi Ryan*/
-/*
-const char* ssid = "Mi10";
-const char* password = "12345678";
-*/
-
-/* WiFi Manu casa */
-/*
-const char* ssid = "FASTWEB-E25F13";
-const char* password = "$Andr0med06.";
-*/
-/* WiFi HDavi casa */
-const char* ssid = "TIM-90212215";
-const char* password = "4s07Twc1U7Iu7CfTJ4a7wXGq";
-
-/* WiFi HDavi telefono */
-/*
-const char* ssid = "HDavi";
-const char* password = "Thegreatd12!";
-*/
+/* WiFi Info */
+const char* ssid = "WiFi-name";
+const char* password = "password";
 
 /* MQTT server address */
 const char* mqtt_server = "broker.mqtt-dashboard.com";
